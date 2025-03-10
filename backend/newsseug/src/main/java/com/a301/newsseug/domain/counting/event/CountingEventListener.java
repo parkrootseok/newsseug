@@ -1,6 +1,6 @@
-package com.a301.newsseug.global.event;
+package com.a301.newsseug.domain.counting.event;
 
-import com.a301.newsseug.global.service.CountingService;
+import com.a301.newsseug.domain.counting.service.CountingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

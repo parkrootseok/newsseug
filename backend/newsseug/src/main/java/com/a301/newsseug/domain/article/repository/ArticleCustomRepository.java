@@ -1,6 +1,7 @@
 package com.a301.newsseug.domain.article.repository;
 
 import com.a301.newsseug.domain.article.model.entity.Article;
+import com.a301.newsseug.domain.counting.model.dto.CountingDto;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

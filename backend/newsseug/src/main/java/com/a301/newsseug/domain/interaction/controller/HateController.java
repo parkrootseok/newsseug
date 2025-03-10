@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.interaction.controller;
 
-import com.a301.newsseug.global.service.CountingService;
+import com.a301.newsseug.domain.counting.service.CountingService;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.interaction.service.HateService;
 import com.a301.newsseug.global.model.dto.Result;
