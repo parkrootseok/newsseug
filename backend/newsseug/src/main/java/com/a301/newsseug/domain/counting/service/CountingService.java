@@ -1,4 +1,4 @@
-package com.a301.newsseug.global.service;
+package com.a301.newsseug.domain.counting.service;
 
 import com.a301.newsseug.external.redis.service.RedisHashService;
 
