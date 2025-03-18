@@ -1,6 +1,6 @@
-package com.a301.newsseug.global.service;
+package com.a301.newsseug.domain.counting.service;
 
-import com.a301.newsseug.global.event.CountingEvent;
+import com.a301.newsseug.domain.counting.event.CountingEvent;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,8 @@ public class CountingServiceImpl implements CountingService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void save(String hash, Long HashKey, Long value) {
-        redisTemplate.opsForHash().put(hash, HashKey.toString(), value);
+    public void save(String hash, Long hashKey, Long value) {
+        redisTemplate.opsForHash().put(hash, hashKey.toString(), value);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class CountingServiceImpl implements CountingService {
     }
 
     @Override
-    public Optional<Long> findByKey(String hash, Long HashKey) {
+    public Optional<Long> findByKey(String hash, Long hashKey) {
 
-        Number value = (Number) redisTemplate.opsForHash().get(hash, HashKey.toString());
+        Number value = (Number) redisTemplate.opsForHash().get(hash, hashKey.toString());
 
         if (Objects.nonNull(value)) {
             return Optional.of(value.longValue());
@@ -47,17 +47,13 @@ public class CountingServiceImpl implements CountingService {
     }
 
     @Override
-    public void deleteByKey(String hash, Long HashKey) {
-        redisTemplate.opsForHash().delete(hash, HashKey.toString());
+    public void deleteByKey(String hash, Long hashKey) {
+        redisTemplate.opsForHash().delete(hash, hashKey.toString());
     }
 
     @Override
-    public Long increment(String hash, Long HashKey, Long value) {
-        return redisTemplate.opsForHash().increment(hash, HashKey.toString(), value);
-    }
-
-    public void incrementBatch(List<CountingEvent> events) {
-
+    public Long increment(String hash, Long hashKey, Long value) {
+        return redisTemplate.opsForHash().increment(hash, hashKey.toString(), value);
     }
 
 }

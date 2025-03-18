@@ -1,8 +1,8 @@
 services:
 
-  mariadb:
-    image: mariadb:11.5.2
-    container_name: mariadb
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql
     ports:
       - 3306:3306
     environment:
@@ -10,7 +10,7 @@ services:
       MYSQL_USER: newsseug
       MYSQL_DATABASE: newsseug
       MYSQL_PASSWORD: newsseug1234
-      MARIADB_ROOT_PASSWORD: newsseug1234
+      MYSQL_ROOT_PASSWORD: newsseug1234
     volumes:
       - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
     networks:
@@ -21,35 +21,6 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    networks:
-      - local-bridge
-
-  es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
-    container_name: es
-    environment:
-      - node.name=es-node
-      - cluster.name=search-cluster
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-    ports:
-      - 9200:9200
-      - 9300:9300
-    networks:
-      - local-bridge
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.6.2
-    container_name: kibana
-    environment:
-      SERVER_NAME: kibana
-      ELASTICSEARCH_HOSTS: http://es:9200
-    ports:
-      - 5601:5601
-    depends_on:
-      - es
     networks:
       - local-bridge
 

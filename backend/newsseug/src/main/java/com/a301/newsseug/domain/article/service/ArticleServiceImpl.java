@@ -19,7 +19,7 @@ import com.a301.newsseug.domain.press.repository.PressRepository;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.a301.newsseug.global.model.entity.SliceDetails;
-import com.a301.newsseug.global.service.CountingService;
+import com.a301.newsseug.domain.counting.service.CountingService;
 import com.a301.newsseug.global.util.AgeUtil;
 import com.a301.newsseug.global.util.ClockUtil;
 import java.time.LocalDateTime;

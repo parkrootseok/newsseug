@@ -6,6 +6,7 @@ import static com.a301.newsseug.domain.article.model.entity.QBirthYearViewCount.
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
 import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
+import com.a301.newsseug.domain.counting.model.dto.CountingDto;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.querydsl.core.BooleanBuilder;

@@ -1,4 +1,4 @@
-package com.a301.newsseug.global.event;
+package com.a301.newsseug.domain.counting.event;
 
 import lombok.Builder;
 

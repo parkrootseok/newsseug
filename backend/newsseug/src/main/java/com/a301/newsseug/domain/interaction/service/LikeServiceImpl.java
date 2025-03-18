@@ -8,7 +8,7 @@ import com.a301.newsseug.domain.interaction.model.entity.Like;
 import com.a301.newsseug.domain.interaction.repository.HateRepository;
 import com.a301.newsseug.domain.interaction.repository.LikeRepository;
 import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.global.event.CountingEvent;
+import com.a301.newsseug.domain.counting.event.CountingEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
