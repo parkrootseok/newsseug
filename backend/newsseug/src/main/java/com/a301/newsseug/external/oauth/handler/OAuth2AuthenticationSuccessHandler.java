@@ -1,6 +1,6 @@
-package com.a301.newsseug.global.handler;
+package com.a301.newsseug.external.oauth.handler;
 
-import com.a301.newsseug.domain.auth.model.entity.CustomOAuth2User;
+import com.a301.newsseug.external.oauth.model.entity.CustomOAuth2User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

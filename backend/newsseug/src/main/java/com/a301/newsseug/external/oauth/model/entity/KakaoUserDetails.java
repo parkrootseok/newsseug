@@ -1,6 +1,6 @@
-package com.a301.newsseug.domain.auth.model.entity;
+package com.a301.newsseug.external.oauth.model.entity;
 
-import com.a301.newsseug.domain.member.model.entity.type.ProviderType;
+import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

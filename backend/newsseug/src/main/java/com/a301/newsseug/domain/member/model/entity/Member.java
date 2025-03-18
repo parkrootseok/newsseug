@@ -1,7 +1,7 @@
 package com.a301.newsseug.domain.member.model.entity;
 
 import com.a301.newsseug.domain.member.model.entity.type.GenderType;
-import com.a301.newsseug.domain.member.model.entity.type.ProviderType;
+import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import com.a301.newsseug.domain.member.model.entity.type.RoleType;
 import com.a301.newsseug.global.model.entity.BaseEntity;
 import jakarta.persistence.Embedded;
@@ -11,7 +11,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.UUID;

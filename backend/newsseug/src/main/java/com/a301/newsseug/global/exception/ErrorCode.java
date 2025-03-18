@@ -2,6 +2,7 @@ package com.a301.newsseug.global.exception;
 
 import static com.a301.newsseug.global.constant.ErrorMessage.*;
 
+import com.a301.newsseug.global.constant.ErrorMessage;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public enum ErrorCode {
      * - 요청된 리소스에 대한 유효한 인증 자격 증명이 없음
      */
     INACCESSIBLE_FOLDER(HttpStatus.UNAUTHORIZED, INACCESSIBLE_FOLDER_MESSAGE),
+    OAUTH_UNLINK(HttpStatus.UNAUTHORIZED, OAUTH_UNLINK_MESSAGE),
 
     /**
      * [403 Forbidden]

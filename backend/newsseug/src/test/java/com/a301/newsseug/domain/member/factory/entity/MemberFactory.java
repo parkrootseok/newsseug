@@ -3,7 +3,7 @@ package com.a301.newsseug.domain.member.factory.entity;
 import com.a301.newsseug.domain.member.factory.fixtures.MemberFixtures;
 import com.a301.newsseug.domain.member.model.entity.type.GenderType;
 import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.domain.member.model.entity.type.ProviderType;
+import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import com.a301.newsseug.domain.member.model.entity.type.RoleType;
 import java.time.LocalDate;
 import org.springframework.test.util.ReflectionTestUtils;

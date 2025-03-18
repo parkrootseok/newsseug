@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.member.model.entity;
 
-import com.a301.newsseug.domain.member.model.entity.type.ProviderType;
+import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import com.a301.newsseug.domain.member.model.entity.type.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

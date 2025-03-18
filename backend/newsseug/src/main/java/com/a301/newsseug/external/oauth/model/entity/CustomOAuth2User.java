@@ -1,4 +1,4 @@
-package com.a301.newsseug.domain.auth.model.entity;
+package com.a301.newsseug.external.oauth.model.entity;
 
 import com.a301.newsseug.domain.member.model.entity.Member;
 import java.util.Collection;

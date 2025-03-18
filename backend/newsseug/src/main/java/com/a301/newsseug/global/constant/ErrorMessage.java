@@ -18,6 +18,7 @@ public class ErrorMessage {
      * - 요청된 리소스에 대한 유효한 인증 자격 증명이 없음
      */
     public static final String INACCESSIBLE_FOLDER_MESSAGE = "접근할 수 없는 폴더입니다.";
+    public static final String OAUTH_UNLINK_MESSAGE = "OAuth2 연동이 해제되었습니다.";
 
     /**
      * [403 Forbidden]

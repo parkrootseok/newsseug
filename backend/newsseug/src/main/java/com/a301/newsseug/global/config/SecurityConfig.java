@@ -2,13 +2,13 @@ package com.a301.newsseug.global.config;
 
 import static com.a301.newsseug.domain.member.model.entity.type.RoleType.*;
 
-import com.a301.newsseug.domain.auth.service.CustomOAuth2UserService;
+import com.a301.newsseug.external.oauth.service.CustomOAuth2UserService;
 import com.a301.newsseug.domain.auth.service.CustomUserDetailsService;
 import com.a301.newsseug.external.jwt.filter.JwtAuthenticationFilter;
 import com.a301.newsseug.external.jwt.handler.JwtAccessDeniedHandler;
 import com.a301.newsseug.external.jwt.handler.JwtAuthenticationEntryPoint;
 import com.a301.newsseug.external.jwt.service.JwtService;
-import com.a301.newsseug.global.handler.OAuth2AuthenticationSuccessHandler;
+import com.a301.newsseug.external.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.a301.newsseug.domain.member.model.entity.type;
+package com.a301.newsseug.external.oauth.model.entity.type;
 
 import com.a301.newsseug.domain.member.exception.InvalidProviderTypeException;
 import io.swagger.v3.oas.annotations.media.Schema;
