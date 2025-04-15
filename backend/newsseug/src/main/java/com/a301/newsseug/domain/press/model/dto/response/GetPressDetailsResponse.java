@@ -35,8 +35,8 @@ public record GetPressDetailsResponse(
 	public static GetPressDetailsResponse of(Press press) {
 		return GetPressDetailsResponse.builder()
 			.id(press.getPressId())
-			.name(press.getPressBranding().getName())
-			.imageUrl(press.getPressBranding().getImageUrl())
+			.name(press.getName())
+			.imageUrl(press.getImageUrl())
 			.description(press.getDescription())
 			.subscribeCount(press.getSubscribeCount())
 			.isSubscribed(false)
@@ -52,8 +52,8 @@ public record GetPressDetailsResponse(
 	public static GetPressDetailsResponse of(Press press, Boolean isSubscribed) {
 		return GetPressDetailsResponse.builder()
 			.id(press.getPressId())
-			.name(press.getPressBranding().getName())
-			.imageUrl(press.getPressBranding().getImageUrl())
+			.name(press.getName())
+			.imageUrl(press.getImageUrl())
 			.description(press.getDescription())
 			.subscribeCount(press.getSubscribeCount())
 			.isSubscribed(isSubscribed)

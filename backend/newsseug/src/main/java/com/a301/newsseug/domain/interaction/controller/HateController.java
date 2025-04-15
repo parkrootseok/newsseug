@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HateController {
 
     private final HateService hateService;
-    private final CountingService countingService;
 
     @Operation(summary = "싫어요 API", description = "사용자가 기사에 싫어요를 저장한다.",
             responses = {

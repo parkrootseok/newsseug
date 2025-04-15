@@ -1,6 +1,6 @@
 package com.a301.newsseug.external.jwt.service;
 
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.a301.newsseug.external.jwt.config.JwtProperties;
 import com.a301.newsseug.external.jwt.exception.ExpiredTokenException;

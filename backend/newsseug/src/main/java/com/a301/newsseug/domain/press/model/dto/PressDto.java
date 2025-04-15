@@ -29,8 +29,8 @@ public record PressDto(
 	public static PressDto of(Press press) {
 		return PressDto.builder()
 			.id(press.getPressId())
-			.name(press.getPressBranding().getName())
-			.imageUrl(press.getPressBranding().getImageUrl())
+			.name(press.getName())
+			.imageUrl(press.getImageUrl())
 			.description(press.getDescription())
 			.subscribeCount(press.getSubscribeCount())
 			.build();

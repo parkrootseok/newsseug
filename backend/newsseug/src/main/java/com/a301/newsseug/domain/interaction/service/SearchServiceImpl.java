@@ -47,7 +47,7 @@ public class SearchServiceImpl implements SearchService {
         );
 
         Slice<Article> articles = articleRepository.findAllByTitleIsContainingIgnoreCase(keyword, filter, pageable);
-        List<Press> press = pressRepository.findAllByPressBranding_NameIsContainingIgnoreCase(keyword);
+        List<Press> press = pressRepository.findAllByNameIsContainingIgnoreCase(keyword);
 
         if (Objects.nonNull(userDetails)) {
 

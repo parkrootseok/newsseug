@@ -1,6 +1,24 @@
+global:
+  scrape_interval: 5s
+
+remote_write:
+  - url: "http://ec2-43-203-226-138.ap-northeast-2.compute.amazonaws.com:7201/api/v1/write"
+
 scrape_configs:
-  - job_name: 'newsseug-server'
-    scrape_interval: 15s
+  - job_name: 'WAS-01'
     metrics_path: '/newsseug/prometheus'
     static_configs:
-      - targets: ['host.docker.internal:8888']
+      - targets: ['3.38.60.221:8881']
+
+  - job_name: 'WAS-02'
+    metrics_path: '/newsseug/prometheus'
+    static_configs:
+      - targets: ['3.38.60.221:8882']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: [ '3.38.60.221:9121' ]
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: [ '3.38.60.221:9100' ]

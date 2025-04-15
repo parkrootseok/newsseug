@@ -38,7 +38,7 @@ public record GetHistoryResponse(
 				.title(history.getArticle().getTitle())
 				.thumbnailUrl(history.getArticle().getThumbnailUrl())
 				.viewCount(history.getArticle().getViewCount())
-				.pressName(history.getArticle().getPress().getPressBranding().getName())
+				.pressName(history.getArticle().getPress().getName())
 				.viewTime(history.getUpdatedAt())
 			.build();
 	}

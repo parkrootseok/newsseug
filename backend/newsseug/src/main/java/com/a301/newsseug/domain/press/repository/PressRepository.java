@@ -12,6 +12,6 @@ public interface PressRepository extends JpaRepository<Press, Long> {
         return findById(id).orElseThrow(NotExistPressException::new);
     }
 
-    List<Press> findAllByPressBranding_NameIsContainingIgnoreCase(String keyword);
+    List<Press> findAllByNameIsContainingIgnoreCase(String name);
 
 }

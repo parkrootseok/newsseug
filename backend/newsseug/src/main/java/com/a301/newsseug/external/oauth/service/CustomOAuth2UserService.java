@@ -13,21 +13,15 @@ import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import com.a301.newsseug.domain.member.model.entity.type.RoleType;
 import com.a301.newsseug.domain.member.repository.MemberRepository;
-import com.a301.newsseug.external.oauth.strategy.OAuthRevocationCheckStrategy;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Service

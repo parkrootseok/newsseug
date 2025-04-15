@@ -12,14 +12,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "press")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Press extends BaseEntity {
+public class Press {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pressId;
 
-    @Embedded
-    private PressBranding pressBranding;
+    private String name;
+
+    private String imageUrl;
 
     private String description;
 
@@ -29,7 +30,8 @@ public class Press extends BaseEntity {
     public Press(
         String name, String imageUrl, String description
     ) {
-        this.pressBranding = PressBranding.of(name, imageUrl);
+        this.name = name;
+        this.imageUrl = imageUrl;
         this.description = description;
         this.subscribeCount = 0L;
     }
@@ -39,13 +41,10 @@ public class Press extends BaseEntity {
     }
 
     public void decrementSubscribeCount() {
-
-        if (this.subscribeCount== 0) {
+        if (this.subscribeCount == 0) {
             return;
         }
-
         this.subscribeCount--;
-
     }
 
 }
