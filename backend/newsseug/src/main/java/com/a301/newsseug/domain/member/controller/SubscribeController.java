@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +29,7 @@ public class SubscribeController {
 
     @Operation(summary = "구독한 언론사 목록 조회", description = "사용자가 구독한 언론사 목록을 조회한다.")
     @GetMapping("/press")
-    public ResponseEntity<Result<List<GetSubscribeResponse>>> getPress(
+    public ResponseEntity<EntityModel<Result<List<GetSubscribeResponse>>>> getPress(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseUtil.ok(
@@ -38,7 +39,7 @@ public class SubscribeController {
 
     @Operation(summary = "언론사 구독", description = "사용자가 언론사를 구독한다.")
     @PostMapping("/press/{pressId}")
-    public ResponseEntity<Result<Boolean>> subscribePress(
+    public ResponseEntity<EntityModel<Result<Boolean>>> subscribePress(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "pressId") Long pressId
     ) {
@@ -51,7 +52,7 @@ public class SubscribeController {
 
     @Operation(summary = "언론사 구독 해제", description = "사용자가 언론사 구독을 해제한다.")
     @DeleteMapping("/press/{pressId}")
-    public ResponseEntity<Result<Boolean>> unsubscribePress(
+    public ResponseEntity<EntityModel<Result<Boolean>>> unsubscribePress(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "pressId") Long pressId
     ) {

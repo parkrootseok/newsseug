@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,7 @@ public class ReportController {
                     @ApiResponse(description = "신고 실패", responseCode = "400")
             })
     @PostMapping("/articles/{articleId}")
-    public ResponseEntity<Result<Boolean>> reportArticle(
+    public ResponseEntity<EntityModel<Result<Boolean>>> reportArticle(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId,
             @RequestParam ReportType reportType

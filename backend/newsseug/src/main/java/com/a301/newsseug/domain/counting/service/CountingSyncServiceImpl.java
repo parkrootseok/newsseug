@@ -22,7 +22,7 @@ public class CountingSyncServiceImpl implements CountingSyncService {
     private final ArticleRepository articleRepository;
 
     @Override
-    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     @DistributedLock(key = "'COUNT_SYNC'")
     public void scheduledSyncCounting() {
         syncCounting("article:likeCount:", "likeCount");
@@ -34,7 +34,9 @@ public class CountingSyncServiceImpl implements CountingSyncService {
         Map<Object, Object> countingLog = countingService.findByHash(hashKey);
 
         if (Objects.nonNull(countingLog) && !countingLog.isEmpty()) {
+
             countingLog.forEach((key, value) -> {
+
                 Long articleId = Long.parseLong(String.valueOf(key));
                 Number delta = (Number) value;
 
@@ -43,6 +45,7 @@ public class CountingSyncServiceImpl implements CountingSyncService {
                     articleRepository.updateCount(field, articleId, delta.longValue());
                     log.info("Updating articleId: {}, New {}: {}", articleId, field, delta);
                 }
+
             });
         }
     }

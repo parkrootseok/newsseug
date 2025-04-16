@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class MemberFolderController {
 
     @Operation(summary = "사용자 폴더 목록 조회", description = "사용자 폴더 목록을 조회한다.")
     @GetMapping("/folders")
-    public ResponseEntity<Result<SlicedResponse<List<GetMemberFolderResponse>>>> getFolders(
+    public ResponseEntity<EntityModel<Result<SlicedResponse<List<GetMemberFolderResponse>>>>> getFolders(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(required = false, defaultValue = "0", value = "pageNumber") int pageNumber
     ) {

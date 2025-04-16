@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class SearchController {
 
     @Operation(summary = "검색", description = "키워드를 포함하는 언론사, 기사를 조회한다.")
     @GetMapping
-    public ResponseEntity<Result<SearchResponse>> search(
+    public ResponseEntity<EntityModel<Result<SearchResponse>>> search(
             @NullableUserDetails CustomUserDetails userDetails,
             @RequestParam @NotBlank String keyword,
             @RequestParam(required = false, defaultValue = "ALL", value = "filter") String filter,

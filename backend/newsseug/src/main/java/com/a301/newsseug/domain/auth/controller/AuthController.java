@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class AuthController {
 
     @Operation(summary = "로그인 API", description = "로그인을 수행한다.")
     @GetMapping("/login")
-    public ResponseEntity<Result<LoginResponse>> login(
+    public ResponseEntity<EntityModel<Result<LoginResponse>>> login(
             @RequestParam("providerId") @NotBlank String providerId
     ) {
         return ResponseUtil.ok(
@@ -38,7 +39,7 @@ public class AuthController {
 
     @Operation(summary = "로그아웃 API", description = "로그아웃을 수행한다.")
     @GetMapping("/logout")
-    public ResponseEntity<Result<Boolean>> logout(
+    public ResponseEntity<EntityModel<Result<Boolean>>> logout(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam("providerId") String providerId
     ) {
@@ -49,7 +50,7 @@ public class AuthController {
 
     @Operation(summary = "어세스 토큰 재발급 API", description = "어세스 토큰을 재발급한다.")
     @GetMapping("/reissue")
-    public ResponseEntity<Result<ReissueTokenResponse>> issueAccessToken(
+    public ResponseEntity<EntityModel<Result<ReissueTokenResponse>>> issueAccessToken(
             @RequestHeader("refresh-token") String refreshToken,
             @RequestParam("providerId") String providerId
     ) {

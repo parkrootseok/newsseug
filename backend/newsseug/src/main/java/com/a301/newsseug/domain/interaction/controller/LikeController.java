@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,15 +32,12 @@ public class LikeController {
                     @ApiResponse(description = "기사 조회 실패", responseCode = "404")
             })
     @PostMapping("/articles/{articleId}")
-    public ResponseEntity<Result<Boolean>> postLikeToArticle(
+    public ResponseEntity<EntityModel<Result<Boolean>>> createLike(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId
     ) {
         likeService.createLike(userDetails, articleId);
-        return ResponseUtil.ok(
-                Result.of(
-                        Boolean.TRUE
-                ));
+        return ResponseUtil.ok(Result.of(Boolean.TRUE));
     }
 
     @Operation(summary = "좋아요 취소 API", description = "사용자가 기사에 좋아요를 삭제한다.",
@@ -49,15 +47,12 @@ public class LikeController {
                     @ApiResponse(description = "기사 또는 사용자 조회 실패", responseCode = "404")
             })
     @DeleteMapping("/articles/{articleId}")
-    public ResponseEntity<Result<Boolean>> deleteLikeToArticle(
+    public ResponseEntity<EntityModel<Result<Boolean>>> deleteLike(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId
     ) {
         likeService.deleteLike(userDetails, articleId);
-        return ResponseUtil.ok(
-                Result.of(
-                        Boolean.TRUE
-                ));
+        return ResponseUtil.ok(Result.of(Boolean.TRUE));
 
     }
 

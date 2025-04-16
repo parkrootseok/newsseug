@@ -1,6 +1,8 @@
 package com.a301.newsseug.domain.interaction.controller;
 
-import com.a301.newsseug.domain.counting.service.CountingService;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.interaction.service.HateService;
 import com.a301.newsseug.global.model.dto.Result;
@@ -9,8 +11,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +36,12 @@ public class HateController {
                     @ApiResponse(description = "기사 또는 사용자 조회 실패", responseCode = "404")
             })
     @PostMapping("/articles/{articleId}")
-    public ResponseEntity<Result<Boolean>> postHateToArticle(
+    public ResponseEntity<EntityModel<Result<Boolean>>> createHate(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId
     ) {
         hateService.createHate(userDetails, articleId);
-        return ResponseUtil.ok(
-                Result.of(
-                        Boolean.TRUE
-                ));
+        return ResponseUtil.ok(Result.of(Boolean.TRUE));
     }
 
     @Operation(summary = "싫어요 취소 API", description = "사용자가 기사에 싫어요를 저장한다.",
@@ -50,15 +51,12 @@ public class HateController {
                     @ApiResponse(description = "기사 또는 사용자 조회 실패", responseCode = "404")
             })
     @DeleteMapping("/articles/{articleId}")
-    public ResponseEntity<Result<Boolean>> deleteHateToArticle(
+    public ResponseEntity<EntityModel<Result<Boolean>>> deleteHate(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId
     ) {
         hateService.deleteHate(userDetails, articleId);
-        return ResponseUtil.ok(
-                Result.of(
-                        Boolean.TRUE
-                ));
+        return ResponseUtil.ok(Result.of(Boolean.TRUE));
     }
 
 }

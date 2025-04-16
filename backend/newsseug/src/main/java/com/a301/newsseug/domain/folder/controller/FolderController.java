@@ -1,5 +1,8 @@
 package com.a301.newsseug.domain.folder.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.folder.model.dto.response.CreateFolderResponse;
 import com.a301.newsseug.domain.folder.model.dto.response.GetFolderDetailsResponse;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,15 +57,15 @@ public class FolderController {
 
     @Operation(summary = "폴더 생성", description = "사용자가 폴더를 생성한다.")
     @PostMapping
-    public ResponseEntity<Result<CreateFolderResponse>> createFolder(
+    public ResponseEntity<EntityModel<Result<CreateFolderResponse>>> createFolder(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestParam(name = "title") @NotBlank String title
     ) {
-        return ResponseUtil.created(
-                Result.of(
-                        folderService.createFolder(userDetails, title)
-                )
-        );
+        CreateFolderResponse response = folderService.createFolder(userDetails, title);
+        return ResponseUtil.created(EntityModel.of(
+                Result.of(response),
+                linkTo(methodOn(FolderController.class).getFolder(userDetails, 0, response.id())).withRel("folder-" + response.id())
+        ));
     }
 
 }

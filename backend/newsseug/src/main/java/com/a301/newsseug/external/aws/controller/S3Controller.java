@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,18 +30,15 @@ public class S3Controller {
             @Parameter(name = "entity", example = "member"),
             @Parameter(name = "id", example = "1"),
             @Parameter(name = "fileName", example = "profile.svg")
-
     })
     @GetMapping("/upload")
-    public ResponseEntity<Result<GetPreSignedURLResponse>> generateUploadUrl(
+    public ResponseEntity<EntityModel<Result<GetPreSignedURLResponse>>> generateUploadUrl(
             @RequestParam(name = "fileType", defaultValue = "profile") String fileType,
             @RequestParam(name = "entity", defaultValue = "member") String entity,
             @RequestParam(name = "id") String id,
             @RequestParam(name = "fileName") String fileName
     ) {
-        return ResponseUtil.ok(
-                Result.of(s3Service.generateUploadPreSignedUrl(fileType, entity, id, fileName))
-        );
+        return ResponseUtil.ok(Result.of(s3Service.generateUploadPreSignedUrl(fileType, entity, id, fileName)));
     }
 
 }

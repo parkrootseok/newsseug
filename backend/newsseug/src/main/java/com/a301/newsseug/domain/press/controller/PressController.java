@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +37,7 @@ public class PressController {
         @ApiResponse(description = "조회 실패", responseCode = "400")
     })
     @GetMapping
-    public ResponseEntity<Result<List<GetPressResponse>>> getPress(
+    public ResponseEntity<EntityModel<Result<List<GetPressResponse>>>> getPress(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseUtil.ok(Result.of(pressService.getPress(userDetails)));
@@ -48,7 +49,7 @@ public class PressController {
         @ApiResponse(description = "조회 실패", responseCode = "400")
     })
     @GetMapping("/{pressId}")
-    public ResponseEntity<Result<GetPressDetailsResponse>> getPressDetail(
+    public ResponseEntity<EntityModel<Result<GetPressDetailsResponse>>> getPressDetail(
             @NullableUserDetails CustomUserDetails userDetails,
             @Parameter(name = "pressId") @PathVariable("pressId") Long pressId
     ) {

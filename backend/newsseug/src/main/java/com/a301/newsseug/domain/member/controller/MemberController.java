@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class MemberController {
 
     @Operation(summary = "사용자 정보 조회", description = "사용자 정보를 조회한다.")
     @GetMapping()
-    public ResponseEntity<Result<GetMemberResponse>> getMemberDetails(
+    public ResponseEntity<EntityModel<Result<GetMemberResponse>>> getMemberDetails(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseUtil.ok(Result.of(memberService.getMember(userDetails)));
@@ -39,7 +40,7 @@ public class MemberController {
 
     @Operation(summary = "사용자 정보 등록", description = "사용자 정보(닉네임, 성별, 생년월일, 프로필 사진 등)를 등록한다.")
     @PutMapping()
-    public ResponseEntity<Result<Boolean>> updateMember(
+    public ResponseEntity<EntityModel<Result<Boolean>>> updateMember(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody @Valid UpdateMemberRequest request
     ) {
