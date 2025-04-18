@@ -78,14 +78,14 @@ public class PressServiceTest {
 			.containsExactlyInAnyOrder(
 				tuple(
 						press1.getPressId(),
-						press1.getPressBranding().getName(),
-						press1.getPressBranding().getImageUrl(),
+						press1.getName(),
+						press1.getImageUrl(),
 						true
 				),
 				tuple(
 						press2.getPressId(),
-						press2.getPressBranding().getName(),
-						press2.getPressBranding().getImageUrl(),
+						press2.getName(),
+						press2.getImageUrl(),
 						true)
 			);
 

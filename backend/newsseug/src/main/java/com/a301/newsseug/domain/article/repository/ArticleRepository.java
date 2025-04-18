@@ -7,6 +7,7 @@ import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -49,19 +50,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long>, Article
     );
 
     Optional<Article> findByArticleIdAndConversionStatus(Long id, ConversionStatus conversionStatus);
-
-    @Query("SELECT a "
-            + "FROM Article a "
-            + "JOIN BirthYearViewCount b ON b.article = a WHERE YEAR(CURRENT_DATE) - b.birthYear " +
-            "BETWEEN :ageBegin AND :ageEnd " +
-            "GROUP BY a ORDER BY SUM(b.viewCount) DESC")
-    Slice<Article> findAllByBirthYearOrderByViewCount(@Param("ageBegin") Integer ageBegin, @Param("ageEnd") Integer ageEnd, Pageable pageable);
-
-    @Query("SELECT a " +
-        "FROM Article a " +
-        "JOIN BirthYearViewCount b ON b.article = a " +
-        "WHERE YEAR(CURRENT_DATE) - b.birthYear BETWEEN :ageBegin AND :ageEnd AND a.category = :category " +
-        "GROUP BY a ORDER BY SUM(b.viewCount) DESC")
-    Slice<Article> findAllByBirthYearOrderByViewCountFiltered(@Param("ageBegin") Integer ageBegin, @Param("ageEnd") Integer ageEnd, @Param("category") CategoryType category, Pageable pageable);
 
 }

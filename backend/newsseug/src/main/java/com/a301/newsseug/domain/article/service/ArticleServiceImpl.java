@@ -40,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ArticleServiceImpl implements ArticleService {
 
+    private final ArticleCacheManager articleCacheManager;
     private final CountingService countingService;
     private final BirthYearCountService birthYearCountService;
     private final HistoryService historyService;
@@ -54,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
             CustomUserDetails userDetails, Long articleId
     ) {
 
-        Article article = articleRepository.getOrThrow(articleId);
+        Article article = articleCacheManager.getCachedArticle(articleId);
         Long incrementedViewCount = countingService.increment("article:viewCount:", articleId, 1L);
         Long likeCount = countingService.findByKey("article:likeCount:", articleId).orElse(0L);
         Long hateCount = countingService.findByKey("article:hateCount:", articleId).orElse(0L);
