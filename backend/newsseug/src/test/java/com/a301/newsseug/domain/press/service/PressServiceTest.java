@@ -137,8 +137,8 @@ public class PressServiceTest {
 		verify(pressRepository).getOrThrow(press.getPressId());
 
 		assertThat(response.id()).isEqualTo(press.getPressId());
-		assertThat(response.name()).isEqualTo(press.getPressBranding().getName());
-		assertThat(response.imageUrl()).isEqualTo(press.getPressBranding().getImageUrl());
+		assertThat(response.name()).isEqualTo(press.getName());
+		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());
 		assertThat(response.isSubscribed()).isFalse();
 		assertThat(response.subscribeCount()).isEqualTo(0L);
@@ -176,8 +176,8 @@ public class PressServiceTest {
 		verify(subscribeRepository).existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE);
 
 		assertThat(response.id()).isEqualTo(press.getPressId());
-		assertThat(response.name()).isEqualTo(press.getPressBranding().getName());
-		assertThat(response.imageUrl()).isEqualTo(press.getPressBranding().getImageUrl());
+		assertThat(response.name()).isEqualTo(press.getName());
+		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());
 		assertThat(response.isSubscribed()).isTrue();
 		assertThat(response.subscribeCount()).isEqualTo(0L);
@@ -201,8 +201,8 @@ public class PressServiceTest {
 		verify(subscribeRepository).existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE);
 
 		assertThat(response.id()).isEqualTo(press.getPressId());
-		assertThat(response.name()).isEqualTo(press.getPressBranding().getName());
-		assertThat(response.imageUrl()).isEqualTo(press.getPressBranding().getImageUrl());
+		assertThat(response.name()).isEqualTo(press.getName());
+		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());
 		assertThat(response.isSubscribed()).isFalse();
 		assertThat(response.subscribeCount()).isEqualTo(0L);

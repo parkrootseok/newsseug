@@ -6,6 +6,7 @@ import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
 import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
+import com.a301.newsseug.domain.counting.service.ViewCounterBuffer;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleHateDto;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleLikeDto;
 import com.a301.newsseug.domain.interaction.model.entity.History;
@@ -41,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleCacheManager articleCacheManager;
+    private final ViewCounterBuffer viewCounterBuffer;
     private final CountingService countingService;
     private final BirthYearCountService birthYearCountService;
     private final HistoryService historyService;
@@ -56,9 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
     ) {
 
         Article article = articleCacheManager.getCachedArticle(articleId);
-        Long incrementedViewCount = countingService.increment("article:viewCount:", articleId, 1L);
-        Long likeCount = countingService.findByKey("article:likeCount:", articleId).orElse(0L);
-        Long hateCount = countingService.findByKey("article:hateCount:", articleId).orElse(0L);
+
+        Long viewCountInBuffer = viewCounterBuffer.increment(articleId);
+        Long viewCountInRedis = countingService.findByKey("article:viewCount:", articleId).orElse(0L);
+        Long likeCountInRedis = countingService.findByKey("article:likeCount:", articleId).orElse(0L);
+        Long hateCountInRedis = countingService.findByKey("article:hateCount:", articleId).orElse(0L);
 
         if (Objects.nonNull(userDetails)) {
 
@@ -68,17 +72,17 @@ public class ArticleServiceImpl implements ArticleService {
 
             return GetArticleDetailsResponse.of(
                     article,
-                    article.getViewCount() + incrementedViewCount,
+                    article.getViewCount() + viewCountInBuffer + viewCountInRedis,
                     subscribeService.isSubscribed(member, article.getPress()),
                     SimpleLikeDto.of(
                             likeRepository.existsByMemberAndArticle(userDetails.getMember(),
                                     article),
-                            article.getLikeCount() + likeCount
+                            article.getLikeCount() + likeCountInRedis
                     ),
                     SimpleHateDto.of(
                             hateRepository.existsByMemberAndArticle(userDetails.getMember(),
                                     article),
-                            article.getHateCount() + hateCount
+                            article.getHateCount() + hateCountInRedis
                     )
             );
 
@@ -86,10 +90,10 @@ public class ArticleServiceImpl implements ArticleService {
 
         return GetArticleDetailsResponse.of(
                 article,
-                article.getViewCount() + incrementedViewCount,
+                article.getViewCount() + viewCountInBuffer + viewCountInRedis,
                 false,
-                SimpleLikeDto.of(false, article.getLikeCount() + likeCount),
-                SimpleHateDto.of(false, article.getHateCount() + hateCount)
+                SimpleLikeDto.of(false, article.getLikeCount() + likeCountInRedis),
+                SimpleHateDto.of(false, article.getHateCount() + hateCountInRedis)
         );
 
     }

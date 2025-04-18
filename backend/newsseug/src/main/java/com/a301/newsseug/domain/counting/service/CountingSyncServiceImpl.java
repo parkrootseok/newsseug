@@ -2,10 +2,7 @@ package com.a301.newsseug.domain.counting.service;
 
 import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.domain.article.service.ArticleCacheManager;
-import com.a301.newsseug.domain.counting.model.dto.CountingDto;
 import com.a301.newsseug.external.redisson.DistributedLock;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,12 +21,25 @@ public class CountingSyncServiceImpl implements CountingSyncService {
     private final ArticleRepository articleRepository;
 
     @Override
-    @Scheduled(cron = "0 0/5 * * * ?")
-    @DistributedLock(key = "'COUNT_SYNC'")
-    public void scheduledSyncCounting() {
-        syncCounting("article:likeCount:", "likeCount");
-        syncCounting("article:hateCount:", "hateCount");
+    @Scheduled(cron = "0 0/3 * * * ?")
+    @DistributedLock(key = "'VIEW_COUNT_SYNC'")
+    public void scheduledSyncViewCounting() {
         syncCounting("article:viewCount:", "viewCount");
+    }
+
+
+    @Override
+    @Scheduled(cron = "0 0/7 * * * ?")
+    @DistributedLock(key = "'LIKE_COUNT_SYNC'")
+    public void scheduledSyncLikeCounting() {
+        syncCounting("article:likeCount:", "likeCount");
+    }
+
+    @Override
+    @Scheduled(cron = "0 0/7 * * * ?")
+    @DistributedLock(key = "'HATE_COUNT_SYNC'")
+    public void scheduledSyncHateCounting() {
+        syncCounting("article:hateCount:", "hateCount");
     }
 
     private void syncCounting(String hashKey, String field) {
