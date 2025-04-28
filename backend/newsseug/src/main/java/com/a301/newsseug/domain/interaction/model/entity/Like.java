@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
         name = "likes",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uniqueLike",
+                        name = "unique_member_aticle",
                         columnNames = {"member_id", "article_id"}
                 )
         }

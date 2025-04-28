@@ -2,7 +2,7 @@ package com.a301.newsseug.domain.counting.service;
 
 import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.domain.article.service.ArticleCacheManager;
-import com.a301.newsseug.external.redisson.DistributedLock;
+import com.a301.newsseug.external.redisson.annotation.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +26,6 @@ public class CountingSyncServiceImpl implements CountingSyncService {
     public void scheduledSyncViewCounting() {
         syncCounting("article:viewCount:", "viewCount");
     }
-
 
     @Override
     @Scheduled(cron = "0 0/7 * * * ?")
