@@ -1,10 +1,11 @@
 package com.a301.newsseug.external.redis.config;
 
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,16 +16,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @RequiredArgsConstructor
 public class RedisConfig {
 
-    private final Environment env;
+    private final RedisProperties properties;
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
-
-        return new LettuceConnectionFactory(
-                Objects.requireNonNull(env.getProperty("spring.data.redis.host")),
-                Integer.parseInt(Objects.requireNonNull(env.getProperty("spring.data.redis.port")))
-        );
-
+        return new LettuceConnectionFactory(properties.host(), properties.port());
     }
 
     @Bean

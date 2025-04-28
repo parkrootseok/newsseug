@@ -2,11 +2,10 @@ package com.a301.newsseug.external.redis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "redis")
+@ConfigurationProperties(prefix = "spring.data.redis")
 public record RedisProperties(
-        ViewCounter viewCounter
+        String host,
+        int port
 ) {
-    public record ViewCounter(
-            Long threshold
-    ) { }
+
 }

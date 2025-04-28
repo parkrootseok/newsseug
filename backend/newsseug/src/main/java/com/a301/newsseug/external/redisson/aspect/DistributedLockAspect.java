@@ -1,5 +1,7 @@
-package com.a301.newsseug.external.redisson;
+package com.a301.newsseug.external.redisson.aspect;
 
+import com.a301.newsseug.external.redisson.annotation.DistributedLock;
+import com.a301.newsseug.external.redisson.util.CustomSpringELParser;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +24,7 @@ public class DistributedLockAspect {
     private static final String REDISSON_LOCK_PREFIX = "SCHEDULER";
     private final RedissonClient redissonClient;
 
-    @Around("@annotation(com.a301.newsseug.external.redisson.DistributedLock)")
+    @Around("@annotation(com.a301.newsseug.external.redisson.annotation.DistributedLock)")
     public Object distributedLock(ProceedingJoinPoint joinPoint) throws Throwable {
 
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -52,7 +54,6 @@ public class DistributedLockAspect {
                         TimeUnit.SECONDS
                 );
             } catch (Exception e) {
-                // 락 획득 실패 시 Optional 리턴
                 log.warn("Fail to occupy lock={}", key);
                 return Optional.empty();
             }

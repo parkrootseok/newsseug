@@ -1,4 +1,4 @@
-package com.a301.newsseug.external.redisson;
+package com.a301.newsseug.external.redisson.util;
 
 import java.util.Objects;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

@@ -1,4 +1,4 @@
-package com.a301.newsseug.external.redisson;
+package com.a301.newsseug.external.redisson.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -13,6 +13,6 @@ public @interface DistributedLock {
 
     String key();
     long waitTime() default 5L;
-    long leaseTime() default 2L;
+    long leaseTime() default 150L;
 
 }
