@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Schema(description = "뉴스 카테고리")
 public enum CategoryType {
 
+    @Schema(description = "모든 카테고리")
+    ALL("all"),
+
     @Schema(description = "정치")
     POLITICS("politics"),
 
@@ -33,17 +36,12 @@ public enum CategoryType {
 
     private final String value;
 
-    public static CategoryType convertToEnum(String categoryValue) {
-
-        CategoryType categoryType;
-
+    public static CategoryType from(String value) {
         try {
-            categoryType = CategoryType.valueOf(categoryValue.toUpperCase());
+            return CategoryType.valueOf(value.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new InvalidCategoryTypeException();
         }
-
-        return categoryType;
     }
 
 }

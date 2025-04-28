@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.a301.newsseug.domain.article.model.dto.response.*;
 import com.a301.newsseug.domain.article.service.ArticleService;
+import com.a301.newsseug.domain.article.usecase.ArticleUseCase;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.interaction.controller.HateController;
 import com.a301.newsseug.domain.interaction.controller.LikeController;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final ArticleUseCase useCase;
 
     @Operation(summary = "단일 기사 상세 정보 조회 API", description = "단일 기사 상세 정보를 조회한다.")
     @GetMapping("/{articleId}")
@@ -55,16 +57,10 @@ public class ArticleController {
             @RequestParam(required = false, defaultValue = "ALL", value = "filter") String filter
 
     ) {
-        return ResponseUtil.ok(Result.of(articleService.getArticlesByCategory(filter, pageNumber)));
-    }
-
-    @Operation(summary = "랜덤 기사 조회 API", description = "랜덤 기사 리스트를 조회한다.")
-    @GetMapping("/random")
-    public ResponseEntity<EntityModel<Result<SlicedResponse<List<GetArticleResponse>>>>> getRandomArticle(
-            @AuthenticationPrincipal CustomUserDetails userDetails
-    ) {
         return ResponseUtil.ok(
-                Result.of(articleService.getRandomArticle(userDetails))
+                Result.of(
+                        useCase.retrieveAllArticle(filter, pageNumber)
+                )
         );
     }
 
@@ -75,6 +71,16 @@ public class ArticleController {
             @RequestParam(required = false, defaultValue = "ALL", value = "filter") String filter
     ) {
         return ResponseUtil.ok(Result.of(articleService.getTodayArticlesByCategory(filter, pageNumber)));
+    }
+
+    @Operation(summary = "랜덤 기사 조회 API", description = "랜덤 기사 리스트를 조회한다.")
+    @GetMapping("/random")
+    public ResponseEntity<EntityModel<Result<SlicedResponse<List<GetArticleResponse>>>>> getRandomArticle(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        return ResponseUtil.ok(
+                Result.of(articleService.getRandomArticle(userDetails))
+        );
     }
 
     @Operation(summary = "언론사별 기사 조회 API", description = "언론사별 기사 리스트를 조회한다.")

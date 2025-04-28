@@ -3,10 +3,11 @@ package com.a301.newsseug.domain.article.repository;
 import static com.a301.newsseug.domain.article.model.entity.QArticle.article;
 import static com.a301.newsseug.domain.article.model.entity.QBirthYearViewCount.birthYearViewCount;
 
+import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveConditionDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
 import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
-import com.a301.newsseug.domain.counting.model.dto.CountingDto;
+import com.a301.newsseug.domain.article.util.ArticleConditionBuilder;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.querydsl.core.BooleanBuilder;
@@ -36,17 +37,27 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Article> findAllByCategoryAndCreatedAtBetween(
-            String filter, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable
-    ) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        builder.and(article.sourceCreatedAt.between(startOfDay, endOfDay));
-        return executeQuery(builder, pageable);
+    public Slice<Article> findAll(ArticleRetrieveConditionDto conditions, Pageable pageable) {
+        return executeQuery(ArticleConditionBuilder.build(conditions), pageable);
+    }
+
+    @Override
+    public Slice<Article> findAllByCategory(ArticleRetrieveConditionDto conditions, Pageable pageable) {
+        return executeQuery(ArticleConditionBuilder.build(conditions), pageable);
     }
 
     @Override
     public Slice<Article> findAllByCategory(String filter, Pageable pageable) {
         BooleanBuilder builder = createBaseCondition(filter);
+        return executeQuery(builder, pageable);
+    }
+
+    @Override
+    public Slice<Article> findAllByCategoryAndCreatedAtBetween(
+            String filter, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable
+    ) {
+        BooleanBuilder builder = createBaseCondition(filter);
+        builder.and(article.sourceCreatedAt.between(startOfDay, endOfDay));
         return executeQuery(builder, pageable);
     }
 
@@ -84,6 +95,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
                 .selectFrom(article)
                 .join(article.press).fetchJoin()
                 .join(birthYearViewCount).on(birthYearViewCount.article.eq(article))
+                .where(createBaseCondition())
                 .where(builder)
                 .orderBy(new OrderSpecifier<>(Order.DESC, birthYearViewCount.viewCount))
                 .offset(pageable.getOffset())
@@ -123,6 +135,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
         if (Objects.nonNull(category) && !category.equalsIgnoreCase("ALL")) {
             addCategoryCondition(builder, category, article.category::eq);
         }
+
         builder.and(article.activationStatus.eq(ActivationStatus.ACTIVE));
         builder.and(article.conversionStatus.eq(ConversionStatus.SUCCESS));
 
@@ -130,18 +143,30 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
     }
 
+    private BooleanBuilder createBaseCondition() {
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(article.activationStatus.eq(ActivationStatus.ACTIVE));
+        builder.and(article.conversionStatus.eq(ConversionStatus.SUCCESS));
+        return builder;
+    }
+
+    private <T> void addCategoryCondition(BooleanBuilder builder, String value, Function<CategoryType , BooleanExpression> condition) {
+        builder.and(condition.apply(CategoryType.from(value)));
+    }
+
     /**
      * 쿼리를 실행하고 Slice로 반환하는 메서드
-     * @param builder BooleanBuilder에 추가된 조건
+     * @param conditions BooleanBuilder에 추가된 조건
      * @param pageable 페이징 정보
      * @return Slice<Article>
      */
-    private Slice<Article> executeQuery(BooleanBuilder builder, Pageable pageable) {
+    private Slice<Article> executeQuery(BooleanBuilder conditions, Pageable pageable) {
 
         List<Article> content = jpaQueryFactory
                 .selectFrom(article)
                 .join(article.press).fetchJoin()
-                .where(builder)
+                .where(createBaseCondition())
+                .where(conditions)
                 .orderBy(new OrderSpecifier<>(Order.DESC, article.sourceCreatedAt))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
@@ -155,10 +180,6 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
         return new SliceImpl<>(content, pageable, hasNext);
 
-    }
-
-    private <T> void addCategoryCondition(BooleanBuilder builder, String value, Function<CategoryType , BooleanExpression> condition) {
-        builder.and(condition.apply(CategoryType.convertToEnum(value)));
     }
 
 }

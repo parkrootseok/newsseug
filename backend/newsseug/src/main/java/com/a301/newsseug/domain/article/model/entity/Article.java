@@ -11,7 +11,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "articles")
+@Table(
+        name = "articles",
+        indexes = {
+                @Index(name = "idx_category_press_created_at_desc", columnList = "category, pressId, sourceCreatedAt DESC"),
+                @Index(name = "idx_press_created_at_desc", columnList = "pressId, sourceCreatedAt DESC")
+        }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article extends BaseEntity {
 
