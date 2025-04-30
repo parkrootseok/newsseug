@@ -11,7 +11,6 @@ import com.a301.newsseug.domain.folder.model.entity.Folder;
 import com.a301.newsseug.domain.folder.repository.FolderRepository;
 import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void createBookmark(CustomUserDetails userDetails, CreateBookmarkRequest request) {
 
         Member loginMember = userDetails.getMember();
-        Article article = articleRepository.getOrThrow(request.articleId());
+        Article article = articleRepository.findOrThrow(request.articleId());
         List<Folder> folders = getFolderFromFolderId(request.folderIds(), loginMember, article);
 
         List<Bookmark> bookmarks = folders.stream()
@@ -60,7 +59,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
         for (Long id : folderIds) {
             Folder folder = folderRepository
-                    .findByFolderIdAndMemberAndActivationStatus(id, loginMember, ActivationStatus.ACTIVE)
+                    .findByIdAndMemberAndActivationStatus(id, loginMember, ActivationStatus.ACTIVE)
                     .orElseThrow(InaccessibleFolderException::new);
 
             folder.setThumbnailUrl(article.getThumbnailUrl());

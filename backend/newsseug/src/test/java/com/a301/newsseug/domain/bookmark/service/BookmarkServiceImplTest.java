@@ -70,7 +70,7 @@ class BookmarkServiceImplTest {
                 .map(FolderFactory::folder)
                 .toList();
 
-        given(articleRepository.getOrThrow(request.articleId())).willReturn(ArticleFactory.article(articleId));
+        given(articleRepository.findOrThrow(request.articleId())).willReturn(ArticleFactory.article(articleId));
         given(folderRepository.findByFolderIdAndMemberAndActivationStatus(1L, loginMember, ActivationStatus.ACTIVE))
                 .willReturn(Optional.of(folders.get(0)));
         given(folderRepository.findByFolderIdAndMemberAndActivationStatus(2L, loginMember, ActivationStatus.ACTIVE))
@@ -93,7 +93,7 @@ class BookmarkServiceImplTest {
         List<Long> folderIds = List.of(1L, 2L);
         CreateBookmarkRequest request = BookmarkRequestFactory.createBookmarkRequest(articleId, folderIds);
 
-        given(articleRepository.getOrThrow(request.articleId())).willReturn(ArticleFactory.article(articleId));
+        given(articleRepository.findOrThrow(request.articleId())).willReturn(ArticleFactory.article(articleId));
         given(folderRepository.findByFolderIdAndMemberAndActivationStatus(1L, loginMember, ActivationStatus.ACTIVE))
                 .willReturn(Optional.empty());
 
@@ -112,13 +112,13 @@ class BookmarkServiceImplTest {
         List<Long> folderIds = List.of(1L);
         Folder folder = FolderFactory.folder(1L);
 
-        given(articleRepository.getOrThrow(article.getArticleId())).willReturn(article);
-        given(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getFolderId(), loginMember, ActivationStatus.ACTIVE))
+        given(articleRepository.findOrThrow(article.getId())).willReturn(article);
+        given(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getId(), loginMember, ActivationStatus.ACTIVE))
                 .willReturn(Optional.of(folder));
 
         // When
         bookmarkService
-                .createBookmark(userDetails, BookmarkRequestFactory.createBookmarkRequest(article.getArticleId(), folderIds));
+                .createBookmark(userDetails, BookmarkRequestFactory.createBookmarkRequest(article.getId(), folderIds));
 
         // Then
         assertThat(folder.getThumbnailUrl()).isEqualTo(article.getThumbnailUrl());

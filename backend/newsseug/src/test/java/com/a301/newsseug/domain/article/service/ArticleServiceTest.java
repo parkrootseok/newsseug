@@ -112,7 +112,7 @@ public class ArticleServiceTest {
     void getArticleDetailWithLoggedInUser() throws JsonProcessingException {
 
         // Given
-        given(articleRepository.getOrThrow(any(Long.class))).willReturn(article);
+        given(articleRepository.findOrThrow(any(Long.class))).willReturn(article);
         given(userDetails.getMember()).willReturn(loginMember);
         given(subscribeRepository.existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE)).willReturn(true);
         given(likeRepository.existsByMemberAndArticle(loginMember, article)).willReturn(true);

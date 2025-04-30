@@ -30,7 +30,7 @@ public record GetPressResponse(
 
     public static GetPressResponse of(Press press) {
         return GetPressResponse.builder()
-                .id(press.getPressId())
+                .id(press.getId())
                 .name(press.getName())
                 .imageUrl(press.getImageUrl())
                 .isSubscribed(false)
@@ -45,7 +45,7 @@ public record GetPressResponse(
 
     public static GetPressResponse of(Press press, Boolean isSubscribed) {
         return GetPressResponse.builder()
-            .id(press.getPressId())
+            .id(press.getId())
             .name(press.getName())
             .imageUrl(press.getImageUrl())
             .isSubscribed(isSubscribed)

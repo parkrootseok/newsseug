@@ -41,7 +41,7 @@ public class FolderServiceImpl implements FolderService {
     public GetFolderDetailsResponse getFolder(CustomUserDetails userDetails, int pageNumber, Long folderId) {
 
         Member loginMember = userDetails.getMember();
-        Folder folder = folderRepository.findByFolderIdAndMemberAndActivationStatus(folderId, loginMember, ActivationStatus.ACTIVE)
+        Folder folder = folderRepository.findByIdAndMemberAndActivationStatus(folderId, loginMember, ActivationStatus.ACTIVE)
                 .orElseThrow(InaccessibleFolderException::new);
 
         Pageable pageable = PageRequest.of(
@@ -49,7 +49,7 @@ public class FolderServiceImpl implements FolderService {
                 10,
                 Sort.by(Sort.Direction.DESC, SortingCriteria.CREATED_AT.getField())
         );
-        Slice<Bookmark> bookmarks = bookmarkRepository.findAllByFolderWithSlice(folder, pageable);
+        Slice<Bookmark> bookmarks = bookmarkRepository.findAllByFolder(folder, pageable);
 
         return GetFolderDetailsResponse.of(
                 folder,

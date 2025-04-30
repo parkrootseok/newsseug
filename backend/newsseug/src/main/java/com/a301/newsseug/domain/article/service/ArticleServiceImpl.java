@@ -10,8 +10,8 @@ import com.a301.newsseug.domain.counting.service.ViewCounterBuffer;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleHateDto;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleLikeDto;
 import com.a301.newsseug.domain.interaction.model.entity.History;
-import com.a301.newsseug.domain.interaction.repository.HateRepository;
-import com.a301.newsseug.domain.interaction.repository.LikeRepository;
+import com.a301.newsseug.domain.interaction.model.entity.type.ReactionType;
+import com.a301.newsseug.domain.interaction.repository.ReactionRepository;
 import com.a301.newsseug.domain.interaction.service.HistoryService;
 import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.domain.member.model.entity.Subscribe;
@@ -49,8 +49,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final SubscribeService subscribeService;
     private final ArticleRepository articleRepository;
     private final PressRepository pressRepository;
-    private final LikeRepository likeRepository;
-    private final HateRepository hateRepository;
+    private final ReactionRepository reactionRepository;
 
     @Override
     public GetArticleDetailsResponse getArticleDetail(
@@ -75,13 +74,11 @@ public class ArticleServiceImpl implements ArticleService {
                     article.getViewCount() + viewCountInBuffer + viewCountInRedis,
                     subscribeService.isSubscribed(member, article.getPress()),
                     SimpleLikeDto.of(
-                            likeRepository.existsByMemberAndArticle(userDetails.getMember(),
-                                    article),
+                            reactionRepository.existsByMemberAndArticleAndType(userDetails.getMember(), article, ReactionType.LIKE),
                             article.getLikeCount() + likeCountInRedis
                     ),
                     SimpleHateDto.of(
-                            hateRepository.existsByMemberAndArticle(userDetails.getMember(),
-                                    article),
+                            reactionRepository.existsByMemberAndArticleAndType(userDetails.getMember(), article, ReactionType.HATE),
                             article.getHateCount() + hateCountInRedis
                     )
             );

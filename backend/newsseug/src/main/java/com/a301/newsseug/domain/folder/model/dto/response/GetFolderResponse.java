@@ -27,11 +27,11 @@ public record GetFolderResponse(
 
     public static GetFolderResponse of(Folder folder, List<Bookmark> bookmarks) {
         return GetFolderResponse.builder()
-                .id(folder.getFolderId())
+                .id(folder.getId())
                 .title(folder.getTitle())
                 .articles(
                         bookmarks.stream()
-                                .map(bookmark -> bookmark.getArticle().getArticleId())
+                                .map(bookmark -> bookmark.getArticle().getId())
                                 .toList()
                 )
                 .build();

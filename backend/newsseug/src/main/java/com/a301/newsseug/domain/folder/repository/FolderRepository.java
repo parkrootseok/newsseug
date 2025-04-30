@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
 
-    Optional<Folder> findByFolderIdAndMemberAndActivationStatus(Long id, Member member, ActivationStatus status);
+    Optional<Folder> findByIdAndMemberAndActivationStatus(Long id, Member member, ActivationStatus status);
 
     List<Folder> findAllByMemberAndActivationStatus(Member member, ActivationStatus activationStatus);
 

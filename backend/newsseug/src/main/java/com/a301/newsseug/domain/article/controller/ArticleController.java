@@ -7,8 +7,7 @@ import com.a301.newsseug.domain.article.model.dto.response.*;
 import com.a301.newsseug.domain.article.service.ArticleService;
 import com.a301.newsseug.domain.article.usecase.ArticleUseCase;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.interaction.controller.HateController;
-import com.a301.newsseug.domain.interaction.controller.LikeController;
+import com.a301.newsseug.domain.interaction.controller.ReactionController;
 import com.a301.newsseug.global.annotation.NullableUserDetails;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
@@ -42,10 +41,10 @@ public class ArticleController {
         EntityModel<Result<GetArticleDetailsResponse>> model = EntityModel.of(
                 Result.of(response),
                 linkTo(methodOn(ArticleController.class).getArticle(userDetails, articleId)).withSelfRel(),
-                linkTo(methodOn(LikeController.class).createLike(userDetails, articleId)).withRel("like-create"),
-                linkTo(methodOn(LikeController.class).deleteLike(userDetails, articleId)).withRel("like-delete"),
-                linkTo(methodOn(HateController.class).createHate(userDetails, articleId)).withRel("hate-create"),
-                linkTo(methodOn(HateController.class).deleteHate(userDetails, articleId)).withRel("hate-delete")
+                linkTo(methodOn(ReactionController.class).doReactionToArticle(userDetails, articleId, "like")).withRel("do-like"),
+                linkTo(methodOn(ReactionController.class).cancelReactionToArticle(userDetails, articleId, "like")).withRel("cancel-like"),
+                linkTo(methodOn(ReactionController.class).doReactionToArticle(userDetails, articleId, "hate")).withRel("do-hate"),
+                linkTo(methodOn(ReactionController.class).cancelReactionToArticle(userDetails, articleId, "hate")).withRel("cancel-hate")
         );
         return ResponseUtil.ok(model);
     }

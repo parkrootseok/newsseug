@@ -13,7 +13,7 @@ public class CountingEventListener {
     private final CountingService countingService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void handleCountingEvent(CountingEvent event) {
+    public void handleCountingEvent(ReactionCountingEvent event) {
         countingService.increment(event.hash(), event.id(), event.delta());
     }
 

@@ -89,19 +89,19 @@ class FolderServiceTest {
                 false
         );
 
-        given(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getFolderId(), loginMember, ActivationStatus.ACTIVE))
+        given(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getId(), loginMember, ActivationStatus.ACTIVE))
                 .willReturn(Optional.of(folder));
 
-        given(bookmarkRepository.findAllByFolderWithSlice(folder, pageable)).willReturn(bookmarks);
+        given(bookmarkRepository.findAllByFolder(folder, pageable)).willReturn(bookmarks);
 
         // When
-        GetFolderDetailsResponse response = folderService.getFolder(userDetails, 0, folder.getFolderId());
+        GetFolderDetailsResponse response = folderService.getFolder(userDetails, 0, folder.getId());
 
         // Then
-        verify(folderRepository).findByFolderIdAndMemberAndActivationStatus(folder.getFolderId(), loginMember, ActivationStatus.ACTIVE);
-        verify(bookmarkRepository).findAllByFolderWithSlice(folder, pageable);
+        verify(folderRepository).findByFolderIdAndMemberAndActivationStatus(folder.getId(), loginMember, ActivationStatus.ACTIVE);
+        verify(bookmarkRepository).findAllByFolder(folder, pageable);
 
-        assertThat(folder.getFolderId()).isEqualTo(response.id());
+        assertThat(folder.getId()).isEqualTo(response.id());
         assertThat(folder.getTitle()).isEqualTo(response.title());
         assertThat(response.articles().getContent().isEmpty()).isFalse();
 
@@ -112,11 +112,11 @@ class FolderServiceTest {
     void getFolderInaccessibleFolder() {
 
         // Given
-        when(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getFolderId(), loginMember, ActivationStatus.ACTIVE))
+        when(folderRepository.findByFolderIdAndMemberAndActivationStatus(folder.getId(), loginMember, ActivationStatus.ACTIVE))
                 .thenReturn(Optional.empty());
 
         // Then
-        assertThatThrownBy(() -> folderService.getFolder(userDetails, PAGE_NUMBER, folder.getFolderId()))
+        assertThatThrownBy(() -> folderService.getFolder(userDetails, PAGE_NUMBER, folder.getId()))
                 .isInstanceOf(InaccessibleFolderException.class);
 
     }
@@ -162,7 +162,7 @@ class FolderServiceTest {
 
         // Then
         verify(folderRepository).save(any(Folder.class));
-        assertThat(response.id()).isEqualTo(folder.getFolderId());
+        assertThat(response.id()).isEqualTo(folder.getId());
         assertThat(response.title()).isEqualTo(folder.getTitle());
         assertThat(response.thumbnailUrl()).isEqualTo(folder.getThumbnailUrl());
         assertThat(response.articleCount()).isEqualTo(folder.getArticleCount());

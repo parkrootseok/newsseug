@@ -119,7 +119,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
         PathBuilder<Long> fieldPath = new PathBuilder<>(Long.class, "article." + field);
         jpaQueryFactory.update(article)
                 .set(fieldPath,  Expressions.numberTemplate(Long.class, "{0} + {1}", fieldPath, count))
-                .where(article.articleId.eq(id))
+                .where(article.id.eq(id))
                 .execute();
     }
 

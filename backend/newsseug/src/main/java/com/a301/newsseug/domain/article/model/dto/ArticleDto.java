@@ -33,7 +33,7 @@ public record ArticleDto(
 
     public static ArticleDto of(Article article, Long currentViewCount) {
         return ArticleDto.builder()
-                .id(article.getArticleId())
+                .id(article.getId())
                 .title(article.getTitle())
                 .viewCount(currentViewCount)
                 .sourceUrl(article.getSourceUrl())

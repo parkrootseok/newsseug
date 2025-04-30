@@ -77,13 +77,13 @@ public class PressServiceTest {
 			.extracting(GetPressResponse::id, GetPressResponse::name, GetPressResponse::imageUrl, GetPressResponse::isSubscribed)
 			.containsExactlyInAnyOrder(
 				tuple(
-						press1.getPressId(),
+						press1.getId(),
 						press1.getName(),
 						press1.getImageUrl(),
 						true
 				),
 				tuple(
-						press2.getPressId(),
+						press2.getId(),
 						press2.getName(),
 						press2.getImageUrl(),
 						true)
@@ -128,15 +128,15 @@ public class PressServiceTest {
 		// Given
 		Press press = PressFactory.press(0L);
 
-		given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+		given(pressRepository.getOrThrow(press.getId())).willReturn(press);
 
 		// When
-		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getPressId());
+		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getId());
 
 		// Then
-		verify(pressRepository).getOrThrow(press.getPressId());
+		verify(pressRepository).getOrThrow(press.getId());
 
-		assertThat(response.id()).isEqualTo(press.getPressId());
+		assertThat(response.id()).isEqualTo(press.getId());
 		assertThat(response.name()).isEqualTo(press.getName());
 		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());
@@ -152,10 +152,10 @@ public class PressServiceTest {
 		Press press = PressFactory.press(0L);
 
 
-		given(pressRepository.getOrThrow(press.getPressId())).willThrow(NotExistPressException.class);
+		given(pressRepository.getOrThrow(press.getId())).willThrow(NotExistPressException.class);
 
 		// Then
-		assertThatThrownBy(() -> pressService.getPressDetails(userDetails, press.getPressId())).isInstanceOf(NotExistPressException.class);
+		assertThatThrownBy(() -> pressService.getPressDetails(userDetails, press.getId())).isInstanceOf(NotExistPressException.class);
 
 	}
 
@@ -165,17 +165,17 @@ public class PressServiceTest {
 
 		// Given
 		Press press = PressFactory.press(0L);
-		given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+		given(pressRepository.getOrThrow(press.getId())).willReturn(press);
 		given(subscribeRepository.existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE)).willReturn(true);
 
 		// When
-		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getPressId());
+		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getId());
 
 		// Then
-		verify(pressRepository).getOrThrow(press.getPressId());
+		verify(pressRepository).getOrThrow(press.getId());
 		verify(subscribeRepository).existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE);
 
-		assertThat(response.id()).isEqualTo(press.getPressId());
+		assertThat(response.id()).isEqualTo(press.getId());
 		assertThat(response.name()).isEqualTo(press.getName());
 		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());
@@ -190,17 +190,17 @@ public class PressServiceTest {
 
 		// Given
 		Press press = PressFactory.press(0L);
-		given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+		given(pressRepository.getOrThrow(press.getId())).willReturn(press);
 		given(subscribeRepository.existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE)).willReturn(false);
 
 		// When
-		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getPressId());
+		GetPressDetailsResponse response = pressService.getPressDetails(userDetails, press.getId());
 
 		// Then
-		verify(pressRepository).getOrThrow(press.getPressId());
+		verify(pressRepository).getOrThrow(press.getId());
 		verify(subscribeRepository).existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE);
 
-		assertThat(response.id()).isEqualTo(press.getPressId());
+		assertThat(response.id()).isEqualTo(press.getId());
 		assertThat(response.name()).isEqualTo(press.getName());
 		assertThat(response.imageUrl()).isEqualTo(press.getImageUrl());
 		assertThat(response.description()).isEqualTo(press.getDescription());

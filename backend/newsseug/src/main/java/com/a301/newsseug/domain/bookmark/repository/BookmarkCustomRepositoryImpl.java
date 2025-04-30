@@ -19,7 +19,7 @@ public class BookmarkCustomRepositoryImpl implements BookmarkCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public Slice<Bookmark> findAllByFolderWithSlice(Folder folder, Pageable pageable) {
+    public Slice<Bookmark> findAllByFolder(Folder folder, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder(bookmark.folder.eq(folder));
         return executeQuery(builder, pageable);
     }

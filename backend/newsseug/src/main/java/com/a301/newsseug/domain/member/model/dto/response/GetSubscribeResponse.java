@@ -28,7 +28,7 @@ public record GetSubscribeResponse(
 
     public static GetSubscribeResponse of(Subscribe subscribe, Boolean isSubscribed) {
         return GetSubscribeResponse.builder()
-                .id(subscribe.getPress().getPressId())
+                .id(subscribe.getPress().getId())
                 .name(subscribe.getPress().getName())
                 .imageUrl(subscribe.getPress().getImageUrl())
                 .isSubscribed(isSubscribed)

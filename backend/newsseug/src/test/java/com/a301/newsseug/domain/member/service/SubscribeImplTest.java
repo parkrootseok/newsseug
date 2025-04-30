@@ -57,11 +57,11 @@ class SubscribeImplTest {
 
         // Given
         Press press = PressFactory.press(1L);
-        given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
 
         // When
-        subscribeService.subscribe(userDetails, press.getPressId());
+        subscribeService.subscribe(userDetails, press.getId());
 
         // Then
         verify(subscribeRepository).save(any(Subscribe.class));
@@ -75,11 +75,11 @@ class SubscribeImplTest {
         // Given
         Press press = PressFactory.press(1L);
         Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
 
         // When
-        subscribeService.subscribe(userDetails, press.getPressId());
+        subscribeService.subscribe(userDetails, press.getId());
 
         // Then
         verify(subscribeRepository, never()).save(any());
@@ -94,11 +94,11 @@ class SubscribeImplTest {
         // Given
         Press press = PressFactory.press(1L);
         Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
 
         // When
-        subscribeService.unsubscribe(userDetails, press.getPressId());
+        subscribeService.unsubscribe(userDetails, press.getId());
 
         // Then
         assertThat(subscribe.getActivationStatus()).isEqualTo(ActivationStatus.INACTIVE);
@@ -110,11 +110,11 @@ class SubscribeImplTest {
 
         // Given
         Press press = PressFactory.press(1L);
-        given(pressRepository.getOrThrow(press.getPressId())).willReturn(press);
+        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
 
         // Then
-        assertThatThrownBy(() -> subscribeService.unsubscribe(userDetails, press.getPressId()))
+        assertThatThrownBy(() -> subscribeService.unsubscribe(userDetails, press.getId()))
                 .isInstanceOf(NotSubscribePressException.class);
         
     }

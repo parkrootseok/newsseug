@@ -14,7 +14,7 @@ public class BirthYearViewCount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long birthViewCountId;
+    Long id;
 
     @Column
     private Integer birthYear;

@@ -28,7 +28,7 @@ public record PressDto(
 
 	public static PressDto of(Press press) {
 		return PressDto.builder()
-			.id(press.getPressId())
+			.id(press.getId())
 			.name(press.getName())
 			.imageUrl(press.getImageUrl())
 			.description(press.getDescription())

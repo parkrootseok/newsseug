@@ -25,7 +25,7 @@ public record GetFolderDetailsResponse(
 
     public static GetFolderDetailsResponse of(Folder folder, SlicedResponse<List<GetArticleResponse>> articles) {
         return GetFolderDetailsResponse.builder()
-                .id(folder.getFolderId())
+                .id(folder.getId())
                 .title(folder.getTitle())
                 .articles(articles)
                 .build();

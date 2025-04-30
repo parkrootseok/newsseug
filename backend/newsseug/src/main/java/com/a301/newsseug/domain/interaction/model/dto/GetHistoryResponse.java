@@ -34,7 +34,7 @@ public record GetHistoryResponse(
 
 	public static GetHistoryResponse of(History history) {
 		return GetHistoryResponse.builder()
-				.id(history.getArticle().getArticleId())
+				.id(history.getArticle().getId())
 				.title(history.getArticle().getTitle())
 				.thumbnailUrl(history.getArticle().getThumbnailUrl())
 				.viewCount(history.getArticle().getViewCount())

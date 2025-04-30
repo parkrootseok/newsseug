@@ -23,7 +23,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void reportArticle(CustomUserDetails userDetails, Long articleId, ReportType reportType) {
 
-        Article article = articleRepository.getOrThrow(articleId);
+        Article article = articleRepository.findOrThrow(articleId);
 
         Report report = Report.builder()
                 .article(article)

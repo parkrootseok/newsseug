@@ -1,7 +1,5 @@
 package com.a301.newsseug.domain.press.model.entity;
 
-import com.a301.newsseug.global.model.entity.BaseEntity;
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +14,7 @@ public class Press {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pressId;
+    private Long id;
 
     private String name;
 

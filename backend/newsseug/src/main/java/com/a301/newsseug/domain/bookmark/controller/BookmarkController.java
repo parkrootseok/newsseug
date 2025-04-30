@@ -3,14 +3,10 @@ package com.a301.newsseug.domain.bookmark.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import com.a301.newsseug.domain.article.controller.ArticleController;
-import com.a301.newsseug.domain.article.model.dto.response.GetArticleDetailsResponse;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.bookmark.model.dto.request.CreateBookmarkRequest;
 import com.a301.newsseug.domain.bookmark.service.BookmarkService;
 import com.a301.newsseug.domain.folder.controller.FolderController;
-import com.a301.newsseug.domain.interaction.controller.HateController;
-import com.a301.newsseug.domain.interaction.controller.LikeController;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;

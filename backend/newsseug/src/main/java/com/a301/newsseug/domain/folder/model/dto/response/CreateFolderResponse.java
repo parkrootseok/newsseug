@@ -26,7 +26,7 @@ public record CreateFolderResponse(
     public static CreateFolderResponse of(Folder folder) {
 
         return CreateFolderResponse.builder()
-                .id(folder.getFolderId())
+                .id(folder.getId())
                 .title(folder.getTitle())
                 .thumbnailUrl(folder.getThumbnailUrl())
                 .articleCount(folder.getArticleCount())

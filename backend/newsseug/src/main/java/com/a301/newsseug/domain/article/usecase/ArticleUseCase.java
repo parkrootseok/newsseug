@@ -1,11 +1,14 @@
 package com.a301.newsseug.domain.article.usecase;
 
 import com.a301.newsseug.domain.article.model.dto.response.GetArticleResponse;
+import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
 import com.a301.newsseug.domain.article.service.ArticleQueryService;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
+import com.a301.newsseug.global.model.entity.SliceDetails;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,13 +26,22 @@ public class ArticleUseCase {
      */
     public SlicedResponse<List<GetArticleResponse>> retrieveAllArticle(String filter, int pageNumber) {
         CategoryType category = CategoryType.from(filter);
+
+        Slice<Article> slicedArticles;
         if (category.equals(CategoryType.ALL)) {
             // 카테고리를 선택하지 않은 경우
-            return queryService.getArticles(pageNumber);
+            slicedArticles = queryService.getSlicedArticles(pageNumber);
         } else {
             // 특정 카테고리를 선택한 경우
-            return queryService.getArticlesByCategory(category, pageNumber);
+            slicedArticles = queryService.getSlicedArticlesByCategory(category, pageNumber);
         }
+
+        return SlicedResponse.of(
+                SliceDetails.of(slicedArticles.getNumber(), slicedArticles.isFirst(),
+                        slicedArticles.hasNext()),
+                GetArticleResponse.of(slicedArticles.getContent())
+        );
+
     }
 
 }

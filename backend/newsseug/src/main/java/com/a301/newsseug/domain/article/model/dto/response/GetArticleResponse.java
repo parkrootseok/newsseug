@@ -36,7 +36,7 @@ public record GetArticleResponse(
 
         public static GetArticleResponse of(Article article) {
                 return GetArticleResponse.builder()
-                        .id(article.getArticleId())
+                        .id(article.getId())
                         .pressName(article.getPress().getName())
                         .thumbnailUrl(article.getThumbnailUrl())
                         .title(article.getTitle())
