@@ -29,6 +29,13 @@ public record ArticleRetrieveConditionDto(
         return Optional.ofNullable(endDate);
     }
 
+    public static ArticleRetrieveConditionDto of(ActivationStatus activationStatus, ConversionStatus conversionStatus) {
+        return ArticleRetrieveConditionDto.builder()
+                .activationStatus(activationStatus)
+                .conversionStatus(conversionStatus)
+                .build();
+    }
+
     public static ArticleRetrieveConditionDto of(
             ActivationStatus activationStatus, ConversionStatus conversionStatus, LocalDateTime start, LocalDateTime end
     ) {
@@ -37,6 +44,16 @@ public record ArticleRetrieveConditionDto(
                 .conversionStatus(conversionStatus)
                 .startDate(start)
                 .endDate(end)
+                .build();
+    }
+
+    public static ArticleRetrieveConditionDto of(
+            CategoryType category, ActivationStatus activationStatus, ConversionStatus conversionStatus
+    ) {
+        return ArticleRetrieveConditionDto.builder()
+                .category(category)
+                .activationStatus(activationStatus)
+                .conversionStatus(conversionStatus)
                 .build();
     }
 

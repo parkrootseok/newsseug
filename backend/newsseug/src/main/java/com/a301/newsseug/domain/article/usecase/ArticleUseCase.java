@@ -31,5 +31,5 @@ public class ArticleUseCase {
             return queryService.getArticlesByCategory(category, pageNumber);
         }
     }
-    
+
 }

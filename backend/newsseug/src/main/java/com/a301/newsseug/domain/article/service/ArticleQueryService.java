@@ -9,8 +9,6 @@ import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.a301.newsseug.global.model.entity.SliceDetails;
-import com.a301.newsseug.global.util.ClockUtil;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,9 +23,8 @@ public class ArticleQueryService {
 
     public SlicedResponse<List<GetArticleResponse>> getArticles(int pageNumber) {
 
-        LocalDateTime endDate = ClockUtil.getLocalDateTime();
         Slice<Article> slicedArticles = articleRepository.findAll(
-                ArticleRetrieveConditionDto.of(ActivationStatus.ACTIVE, ConversionStatus.SUCCESS, endDate.minusMonths(6), endDate),
+                ArticleRetrieveConditionDto.of(ActivationStatus.ACTIVE, ConversionStatus.SUCCESS),
                 PageRequest.of(pageNumber, 10)
         );
 
@@ -40,9 +37,8 @@ public class ArticleQueryService {
 
     public SlicedResponse<List<GetArticleResponse>> getArticlesByCategory(CategoryType category, int pageNumber) {
 
-        LocalDateTime endDate = ClockUtil.getLocalDateTime();
         Slice<Article> slicedArticles = articleRepository.findAllByCategory(
-                ArticleRetrieveConditionDto.of(category, ActivationStatus.ACTIVE, ConversionStatus.SUCCESS, endDate.minusMonths(6), endDate),
+                ArticleRetrieveConditionDto.of(category, ActivationStatus.ACTIVE, ConversionStatus.SUCCESS),
                 PageRequest.of(pageNumber, 10)
         );
 

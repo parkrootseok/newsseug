@@ -93,7 +93,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
         List<Article> content = jpaQueryFactory
                 .selectFrom(article)
-                .join(article.press).fetchJoin()
+                .leftJoin(article.press).fetchJoin()
                 .join(birthYearViewCount).on(birthYearViewCount.article.eq(article))
                 .where(createBaseCondition())
                 .where(builder)
@@ -164,7 +164,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
         List<Article> content = jpaQueryFactory
                 .selectFrom(article)
-                .join(article.press).fetchJoin()
+                .leftJoin(article.press).fetchJoin()
                 .where(createBaseCondition())
                 .where(conditions)
                 .orderBy(new OrderSpecifier<>(Order.DESC, article.sourceCreatedAt))
