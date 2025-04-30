@@ -3,8 +3,8 @@ package com.a301.newsseug.domain.interaction.exception;
 import com.a301.newsseug.global.exception.BaseException;
 import com.a301.newsseug.global.exception.ErrorCode;
 
-public class NotExistLikeException extends BaseException {
-    public NotExistLikeException() {
-        super(ErrorCode.NOT_EXIST_LIKE);
+public class NotExistReactionException extends BaseException {
+    public NotExistReactionException() {
+        super(ErrorCode.NOT_EXIST_REACTION);
     }
 }
