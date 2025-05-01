@@ -28,18 +28,13 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-
-        Server devServer = new Server();
-        devServer.setDescription("dev");
-        devServer.setUrl("https://j11a301.p.ssafy.io");
-
         Server localServer = new Server();
         localServer.setDescription("local");
         localServer.setUrl("http://localhost:8080");
 
         return new OpenAPI()
                 .info(apiInfo())
-                .servers(List.of(devServer, localServer))
+                .servers(List.of(localServer))
                 .components(
                         new Components().addSecuritySchemes(
                                 "Bearer",
@@ -59,7 +54,6 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi memberApi() {
-
         return GroupedOpenApi.builder()
                 .group(Member.class.getSimpleName())
                 .pathsToMatch("/api/v1/auth/**", "/api/v1/members/**")
@@ -69,12 +63,10 @@ public class SwaggerConfig {
                         )
                 )
                 .build();
-
     }
 
     @Bean
     public GroupedOpenApi pressApi() {
-
         return GroupedOpenApi.builder()
                 .group(Press.class.getSimpleName())
                 .pathsToMatch("/api/v1/press/**")
@@ -84,12 +76,10 @@ public class SwaggerConfig {
                         )
                 )
                 .build();
-
     }
 
     @Bean
     public GroupedOpenApi folderApi() {
-
         return GroupedOpenApi.builder()
                 .group(Folder.class.getSimpleName())
                 .pathsToMatch("/api/v1/folders/**", "/api/v1/bookmarks/**")
@@ -99,12 +89,10 @@ public class SwaggerConfig {
                         )
                 )
                 .build();
-
     }
 
     @Bean
     public GroupedOpenApi articleApi() {
-
         return GroupedOpenApi.builder()
                 .group(Article.class.getSimpleName())
                 .pathsToMatch("/api/v1/articles/**")
@@ -114,34 +102,27 @@ public class SwaggerConfig {
                         )
                 )
                 .build();
-
     }
 
     @Bean
     public GroupedOpenApi interactionApi() {
-
         return GroupedOpenApi.builder()
                 .group("Interaction")
-                .pathsToMatch("/api/v1/likes/**", "/api/v1/hates/**", "/api/v1/reports/**", "/api/v1/histories/**", "/api/v1/search/**")
+                .pathsToMatch("/api/v1/reaction/**", "/api/v1/hates/**", "/api/v1/reports/**", "/api/v1/histories/**", "/api/v1/search/**")
                 .addOpenApiCustomizer(openApi ->
                         openApi.addSecurityItem(
                                 new SecurityRequirement().addList("Bearer")
                         )
                 )
                 .build();
-
     }
 
     @Bean
     public GroupedOpenApi S3Api() {
-
         return GroupedOpenApi.builder()
                 .group("S3")
                 .pathsToMatch("/api/v1/s3/**")
                 .build();
-
     }
-
-
 
 }

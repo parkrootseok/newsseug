@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
         name = "reactions",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "unique_member_aticle_type",
-                        columnNames = {"member_id", "article_id, type"}
+                        name = "unique_member_article_type",
+                        columnNames = {"member_id", "article_id", "type"}
                 )
         }
 )
@@ -35,6 +35,7 @@ public class Reaction {
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
+    @Enumerated(EnumType.STRING)
     private ReactionType type;
 
     @Builder
