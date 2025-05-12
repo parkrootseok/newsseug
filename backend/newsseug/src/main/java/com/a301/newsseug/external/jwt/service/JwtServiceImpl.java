@@ -35,7 +35,7 @@ public class JwtServiceImpl implements JwtService {
     private static final String TOKEN_PREFIX = "Bearer ";
 
     private final JwtProperties jwtProperties;
-    private final RedisTokenService redisTokenService;
+    private final RedisTokenRepository redisTokenService;
 
     @Override
     public String issueToken(String providerId, TokenType type) {

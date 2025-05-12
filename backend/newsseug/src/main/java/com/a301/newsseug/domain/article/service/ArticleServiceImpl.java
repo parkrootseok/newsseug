@@ -6,6 +6,7 @@ import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
 import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
+import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
 import com.a301.newsseug.domain.counting.service.ViewCounterBuffer;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleHateDto;
 import com.a301.newsseug.domain.interaction.model.dto.SimpleLikeDto;
@@ -20,7 +21,6 @@ import com.a301.newsseug.domain.press.repository.PressRepository;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.a301.newsseug.global.model.entity.SliceDetails;
-import com.a301.newsseug.domain.counting.service.CountingService;
 import com.a301.newsseug.global.util.AgeUtil;
 import com.a301.newsseug.global.util.ClockUtil;
 import java.time.LocalDateTime;
@@ -41,59 +41,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ArticleServiceImpl implements ArticleService {
 
-    private final ArticleCacheManager articleCacheManager;
-    private final ViewCounterBuffer viewCounterBuffer;
-    private final CountingService countingService;
-    private final BirthYearCountService birthYearCountService;
     private final HistoryService historyService;
     private final SubscribeService subscribeService;
     private final ArticleRepository articleRepository;
     private final PressRepository pressRepository;
-    private final ReactionRepository reactionRepository;
-
-    @Override
-    public GetArticleDetailsResponse getArticleDetail(
-            CustomUserDetails userDetails, Long articleId
-    ) {
-
-        Article article = articleCacheManager.getCachedArticle(articleId);
-
-        Long viewCountInBuffer = viewCounterBuffer.increment(articleId);
-        Long viewCountInRedis = countingService.findByKey("article:viewCount:", articleId).orElse(0L);
-        Long likeCountInRedis = countingService.findByKey("article:likeCount:", articleId).orElse(0L);
-        Long hateCountInRedis = countingService.findByKey("article:hateCount:", articleId).orElse(0L);
-
-        if (Objects.nonNull(userDetails)) {
-
-            Member member = userDetails.getMember();
-            historyService.createHistory(member, article);
-            birthYearCountService.incrementBirthYearCount(member, article);
-
-            return GetArticleDetailsResponse.of(
-                    article,
-                    article.getViewCount() + viewCountInBuffer + viewCountInRedis,
-                    subscribeService.isSubscribed(member, article.getPress()),
-                    SimpleLikeDto.of(
-                            reactionRepository.existsByMemberAndArticleAndType(userDetails.getMember(), article, ReactionType.LIKE),
-                            article.getLikeCount() + likeCountInRedis
-                    ),
-                    SimpleHateDto.of(
-                            reactionRepository.existsByMemberAndArticleAndType(userDetails.getMember(), article, ReactionType.HATE),
-                            article.getHateCount() + hateCountInRedis
-                    )
-            );
-
-        }
-
-        return GetArticleDetailsResponse.of(
-                article,
-                article.getViewCount() + viewCountInBuffer + viewCountInRedis,
-                false,
-                SimpleLikeDto.of(false, article.getLikeCount() + likeCountInRedis),
-                SimpleHateDto.of(false, article.getHateCount() + hateCountInRedis)
-        );
-
-    }
 
     @Override
     public SlicedResponse<List<GetArticleResponse>> getRandomArticle(
@@ -137,21 +88,6 @@ public class ArticleServiceImpl implements ArticleService {
         LocalDateTime endOfDay = startOfDay.plusDays(1);
         Slice<Article> sliced = articleRepository.findAllByCategoryAndCreatedAtBetween(category,
                 startOfDay, endOfDay, pageable);
-
-        return SlicedResponse.of(
-                SliceDetails.of(sliced.getNumber(), sliced.isFirst(), sliced.hasNext()),
-                GetArticleResponse.of(sliced.getContent())
-        );
-
-    }
-
-    @Override
-    public SlicedResponse<List<GetArticleResponse>> getArticlesByCategory(
-            String category, int pageNumber
-    ) {
-
-        Pageable pageable = PageRequest.of(pageNumber, 10);
-        Slice<Article> sliced = articleRepository.findAllByCategory(category, pageable);
 
         return SlicedResponse.of(
                 SliceDetails.of(sliced.getNumber(), sliced.isFirst(), sliced.hasNext()),

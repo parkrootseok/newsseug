@@ -37,7 +37,7 @@ public class ArticleController {
             @NullableUserDetails CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId
    ) {
-        GetArticleDetailsResponse response = articleService.getArticleDetail(userDetails, articleId);
+        GetArticleDetailsResponse response = useCase.retrieveArticleDetails(userDetails, articleId);
         EntityModel<Result<GetArticleDetailsResponse>> model = EntityModel.of(
                 Result.of(response),
                 linkTo(methodOn(ArticleController.class).getArticle(userDetails, articleId)).withSelfRel(),
@@ -61,6 +61,15 @@ public class ArticleController {
                         useCase.retrieveAllArticle(filter, pageNumber)
                 )
         );
+    }
+
+    @Operation(summary = "실시간 인기 뉴스 조회 API", description = "1시간 동안 쌓인 조회수를 기준으로 오름차순 정렬한 상위 10개의 기사를 조회한다.")
+    @GetMapping("/ranking")
+    public ResponseEntity<EntityModel<Result<List<GetArticleResponse>>>> retrieveTop10Article(
+            @RequestParam(required = false, defaultValue = "10", value = "topN") long topN
+    ) {
+        List<GetArticleResponse> responses = useCase.retrieveTopNArticle(topN);
+        return ResponseUtil.ok(Result.of(responses));
     }
 
     @Operation(summary = "오늘의 뉴스 조회 API", description = "\"오늘의 뉴스\"를 조회한다.")

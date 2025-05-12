@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedisTokenServiceImpl implements RedisTokenService {
+public class RedisTokenRepositoryImpl implements RedisTokenRepository {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final String REFRESH_TOKEN_KEY_PREFIX = "member:%s:refresh_token:";

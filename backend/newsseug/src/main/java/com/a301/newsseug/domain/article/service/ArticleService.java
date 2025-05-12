@@ -7,13 +7,9 @@ import java.util.List;
 
 public interface ArticleService {
 
-    GetArticleDetailsResponse getArticleDetail(CustomUserDetails userDetails, Long articleId);
-
     SlicedResponse<List<GetArticleResponse>>  getRandomArticle(CustomUserDetails userDetails);
 
     SlicedResponse<List<GetArticleResponse>> getTodayArticlesByCategory(String category, int pageNumber);
-
-    SlicedResponse<List<GetArticleResponse>> getArticlesByCategory(String category, int pageNumber);
 
     SlicedResponse<List<GetArticleResponse>> getArticlesByPress(CustomUserDetails userDetails, Long pressId, int pageNumber, String category);
 

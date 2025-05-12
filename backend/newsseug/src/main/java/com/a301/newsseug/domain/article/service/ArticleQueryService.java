@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ArticleQueryService {
 
+    private final ArticleCacheManager cacheManager;
     private final ArticleRepository articleRepository;
 
     public Article getArticle(Long articleId) {
-        return articleRepository.findOrThrow(articleId);
+        return cacheManager.getCachedArticle(articleId);
     }
 
     public Slice<Article> getSlicedArticles(int pageNumber) {
@@ -29,12 +30,10 @@ public class ArticleQueryService {
     }
 
     public Slice<Article> getSlicedArticlesByCategory(CategoryType category, int pageNumber) {
-
         return articleRepository.findAllByCategory(
                 ArticleRetrieveConditionDto.of(category, ActivationStatus.ACTIVE, ConversionStatus.SUCCESS),
                 PageRequest.of(pageNumber, 10)
         );
-
     }
 
 }

@@ -1,5 +1,6 @@
 package com.a301.newsseug.domain.counting.service;
 
+import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
 import jakarta.annotation.PreDestroy;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,7 +17,7 @@ public class ViewCounterBuffer {
     private static final int THRESHOLD = 100;
     private static final String REDIS_VIEW_KEY = "article:viewCount:";
 
-    private final CountingService countingService;
+    private final ArticleCountRepository countingService;
 
     // ConcurrentHashMap을 사용하여 멀티 스레드 환경에서도 Thread-safa 유지
     private final ConcurrentHashMap<Long, AtomicLong> buffer = new ConcurrentHashMap<>();
@@ -48,7 +49,6 @@ public class ViewCounterBuffer {
     @Scheduled(cron = "*/30 * * * * ?")
     public void flushAll() {
         buffer.forEach((articleId, counter) -> {
-
             commitCounter(articleId, counter);
 
             // 메모리 누수 방지 : counter를 삭제하지 않으면, 사용하지 않는 객체도 메모리를 사용 중
@@ -58,7 +58,6 @@ public class ViewCounterBuffer {
             if (counter.get() == 0) {
                 buffer.remove(articleId, counter);
             }
-
         });
     }
 
@@ -71,7 +70,7 @@ public class ViewCounterBuffer {
         }
 
         try {
-            countingService.increment(REDIS_VIEW_KEY, articleId, delta);
+            countingService.increment(REDIS_VIEW_KEY, articleId.toString(), delta);
         } catch (Exception e) {
             // Redis에 반영하지 못한 경우, 값을 복구
             log.warn("Redis increment 실패: articleId={}, delta={}", articleId, delta, e);

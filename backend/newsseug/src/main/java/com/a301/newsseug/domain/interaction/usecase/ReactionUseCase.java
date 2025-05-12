@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class InteractionUseCase {
+public class ReactionUseCase {
     
     private final ArticleQueryService articleQueryService;
     private final ReactionCRUDService reactionCRUDService;

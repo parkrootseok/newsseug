@@ -1,7 +1,7 @@
 package com.a301.newsseug.domain.interaction.controller;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.interaction.usecase.InteractionUseCase;
+import com.a301.newsseug.domain.interaction.usecase.ReactionUseCase;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ReactionController {
 
-    private final InteractionUseCase useCase;
+    private final ReactionUseCase useCase;
 
     @Operation(summary = "리액션 API", description = "기사에 대한 리액션을 저장한다.")
     @PostMapping("/articles/{articleId}")
