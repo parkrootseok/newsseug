@@ -1,10 +1,13 @@
 package com.a301.newsseug.domain.counting.repository;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Objects;
@@ -23,8 +26,39 @@ public class ArticleCountRepositoryImpl implements ArticleCountRepository {
     }
 
     @Override
-    public Map<Object, Object> findByHash(String hash) {
-        return redisTemplate.opsForHash().entries(hash);
+    public Map<String, Long> getAndDelByHash(String hash) {
+        String script = """
+            local result = redis.call('HGETALL', KEYS[1])
+            if #result > 0 then
+                local keys = {}
+                for i = 1, #result, 2 do
+                    table.insert(keys, result[i])
+                end
+                redis.call('HDEL', KEYS[1], unpack(keys))
+            end
+            return result
+        """;
+
+        List<Object> results = redisTemplate.execute(
+                new DefaultRedisScript<>(script, List.class),
+                Collections.singletonList(hash)
+        );
+
+        Map<String, Long> map = new HashMap<>();
+        if (Objects.nonNull(results)) {
+            for (int offset = 0; offset < results.size(); offset += 2) {
+                String field = (String) results.get(offset);
+                String valueStr = (String) results.get(offset + 1);
+                try {
+                    Long value = Long.parseLong(valueStr);
+                    map.put(field, value);
+                } catch (NumberFormatException e) {
+                    log.warn("Failed to parse value for field: {} with value: {}", field, valueStr);
+                }
+            }
+        }
+
+        return map;
     }
 
     @Override

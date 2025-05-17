@@ -2,9 +2,8 @@ package com.a301.newsseug.domain.article.repository;
 
 import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveConditionDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
-import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
-import com.a301.newsseug.domain.counting.model.dto.CountingDto;
 import com.a301.newsseug.domain.press.model.entity.Press;
+import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -17,8 +16,6 @@ public interface ArticleCustomRepository {
 
     Slice<Article> findAllByCategoryAndCreatedAtBetween(String filter, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable);
 
-    Slice<Article> findAllByCategory(String filter, Pageable pageable);
-
     Slice<Article> findAllByCategory(ArticleRetrieveConditionDto conditions, Pageable pageable);
 
     Slice<Article> findAllByPressAndCategory(Press press, String filter, Pageable pageable);
@@ -29,6 +26,6 @@ public interface ArticleCustomRepository {
 
     Slice<Article> findAllByBirthYearOrderByViewCount(Integer ageBegin, Integer ageEnd, String category, Pageable pageable);
 
-    void updateCount(String field, Long id, Long count);
+    void batchUpdateCount(String field, Map<String, Long> countingLog);
 
 }

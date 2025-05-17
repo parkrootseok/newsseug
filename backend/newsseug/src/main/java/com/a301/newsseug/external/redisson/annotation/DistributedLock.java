@@ -10,9 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DistributedLock {
-
     String key();
-    long waitTime() default 5L;
-    long leaseTime() default 150L;
-
+    long waitTime();
+    long leaseTime();
 }

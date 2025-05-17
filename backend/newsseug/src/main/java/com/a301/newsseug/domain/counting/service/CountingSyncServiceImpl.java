@@ -4,6 +4,7 @@ import com.a301.newsseug.domain.article.repository.ArticleRepository;
 import com.a301.newsseug.domain.article.service.ArticleCacheManager;
 import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
 import com.a301.newsseug.external.redisson.annotation.DistributedLock;
+import java.util.Queue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,49 +18,36 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CountingSyncServiceImpl implements CountingSyncService {
 
-    private final ArticleCountRepository countingService;
+    private final ArticleCountRepository countingRepository;
     private final ArticleCacheManager articleCacheManager;
     private final ArticleRepository articleRepository;
 
     @Override
-    @Scheduled(cron = "0 0/3 * * * ?")
-    @DistributedLock(key = "'VIEW_COUNT_SYNC'")
+    @Scheduled(cron = "0 0/5 * * * ?")
+    @DistributedLock(key = "'VIEW_COUNT_SYNC'", waitTime = 5L, leaseTime = 280L)
     public void scheduledSyncViewCounting() {
         syncCounting("article:viewCount:", "viewCount");
     }
 
     @Override
     @Scheduled(cron = "0 0/7 * * * ?")
-    @DistributedLock(key = "'LIKE_COUNT_SYNC'")
+    @DistributedLock(key = "'LIKE_COUNT_SYNC'", waitTime = 5L, leaseTime = 390L)
     public void scheduledSyncLikeCounting() {
         syncCounting("article:likeCount:", "likeCount");
     }
 
     @Override
     @Scheduled(cron = "0 0/7 * * * ?")
-    @DistributedLock(key = "'HATE_COUNT_SYNC'")
+    @DistributedLock(key = "'HATE_COUNT_SYNC'", waitTime = 5L, leaseTime = 390L)
     public void scheduledSyncHateCounting() {
         syncCounting("article:hateCount:", "hateCount");
     }
 
-    private void syncCounting(String hashKey, String field) {
-        Map<Object, Object> countingLog = countingService.findByHash(hashKey);
-
+    private void syncCounting(String hash, String field) {
+        Map<String, Long> countingLog = countingRepository.getAndDelByHash(hash);
         if (Objects.nonNull(countingLog) && !countingLog.isEmpty()) {
-
-            countingLog.forEach((key, value) -> {
-
-                String articleId = String.valueOf(key);
-                Number delta = (Number) value;
-
-                if (Objects.nonNull(delta)) {
-                    countingService.deleteByKey(hashKey, articleId);
-                    articleRepository.updateCount(field, Long.valueOf(articleId), delta.longValue());
-                    articleCacheManager.evictArticleCache(Long.valueOf(articleId));
-                    log.info("Updating articleId: {}, New {}: {}", articleId, field, delta);
-                }
-
-            });
+            articleRepository.batchUpdateCount(field, countingLog);
+            articleCacheManager.evictBatch(countingLog.keySet());
         }
     }
 

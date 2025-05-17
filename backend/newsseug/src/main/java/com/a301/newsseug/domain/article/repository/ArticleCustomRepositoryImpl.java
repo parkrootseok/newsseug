@@ -14,12 +14,17 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.CaseBuilder.Cases;
 import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value.Str;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,12 +50,6 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
     @Override
     public Slice<Article> findAllByCategory(ArticleRetrieveConditionDto conditions, Pageable pageable) {
         return executeQuery(ArticleConditionBuilder.build(conditions), pageable);
-    }
-
-    @Override
-    public Slice<Article> findAllByCategory(String filter, Pageable pageable) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        return executeQuery(builder, pageable);
     }
 
     @Override
@@ -115,11 +115,25 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
     @Override
     @Modifying
     @Transactional
-    public void updateCount(String field, Long id, Long count) {
+    public void batchUpdateCount(String field, Map<String, Long> countingLog) {
         PathBuilder<Long> fieldPath = new PathBuilder<>(Long.class, "article." + field);
+        CaseBuilder caseBuilder = new CaseBuilder();
+        CaseBuilder.Cases<Long, NumberExpression<Long>> caseExpression = null;
+
+        for (Map.Entry<String, Long> entry : countingLog.entrySet()) {
+            Long id = Long.parseLong(entry.getKey());
+            Long count = entry.getValue();
+            if (caseExpression == null) {
+                caseExpression = caseBuilder.when(article.id.eq(id)).then(count);
+            } else {
+                caseExpression = caseExpression.when(article.id.eq(id)).then(count);
+            }
+        }
+        NumberExpression<Long> finalExpression = caseExpression.otherwise(0L);
+
         jpaQueryFactory.update(article)
-                .set(fieldPath,  Expressions.numberTemplate(Long.class, "{0} + {1}", fieldPath, count))
-                .where(article.id.eq(id))
+                .set(fieldPath, Expressions.numberTemplate(Long.class, "{0} + {1}", fieldPath, finalExpression))
+                .where(article.id.in(countingLog.keySet().stream().map(Long::parseLong).toList()))
                 .execute();
     }
 
