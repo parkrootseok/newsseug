@@ -41,7 +41,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     public void subscribe(CustomUserDetails userDetails, Long pressId) {
 
         Member loginMember = userDetails.getMember();
-        Press press = pressRepository.getOrThrow(pressId);
+        Press press = pressRepository.findOrThrow(pressId);
         Optional<Subscribe> subscribe = subscribeRepository.findByMemberAndPress(loginMember, press);
 
         if (subscribe.isPresent()) {
@@ -65,7 +65,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     public void unsubscribe(CustomUserDetails userDetails, Long pressId) {
 
         Member loginMember = userDetails.getMember();
-        Press press = pressRepository.getOrThrow(pressId);
+        Press press = pressRepository.findOrThrow(pressId);
         Subscribe subscribe = subscribeRepository.findByMemberAndPress(loginMember, press)
                 .orElseThrow(NotSubscribePressException::new);
 

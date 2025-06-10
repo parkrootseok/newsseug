@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Table(
         name = "articles",
         indexes = {
-                @Index(name = "idx_category_press_created_at_desc", columnList = "category, pressId, sourceCreatedAt DESC"),
-                @Index(name = "idx_press_created_at_desc", columnList = "pressId, sourceCreatedAt DESC")
+                @Index(name = "idx_category_created_at_desc", columnList = "category, sourceCreatedAt DESC, activationStatus, conversionStatus, pressName"),
+                @Index(name = "idx_created_at_desc", columnList = "sourceCreatedAt DESC, activationStatus, conversionStatus, pressName, ")
         }
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,6 +28,9 @@ public class Article extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "press_id", nullable = false)
     private Press press;
+
+    @Column(nullable = false)
+    private String pressName;
 
     @Column(nullable = false)
     private String title;
@@ -63,8 +66,10 @@ public class Article extends BaseEntity {
 
     @Builder
     public Article(
-            Press press, String title, String sourceUrl, String contentUrl, String videoUrl, String thumbnailUrl, CategoryType category) {
+            Press press, String title, String sourceUrl, String contentUrl, String videoUrl, String thumbnailUrl, CategoryType category
+    ) {
         this.press = press;
+        this.pressName = press.getName();
         this.title = title;
         this.sourceUrl = sourceUrl;
         this.contentUrl = contentUrl;
@@ -75,4 +80,5 @@ public class Article extends BaseEntity {
         this.hateCount = 0L;
         this.category = category;
     }
+
 }

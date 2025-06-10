@@ -14,8 +14,6 @@ public interface HistoryService {
 
 	void createHistory(Member member, Article article);
 
-	Optional<History> getLatestHistoryByMember(Member member);
-
 	SlicedResponse<List<GetHistoryResponse>> getHistories(CustomUserDetails userDetails, int page);
 
 }

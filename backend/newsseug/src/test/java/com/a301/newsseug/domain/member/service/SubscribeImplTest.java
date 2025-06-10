@@ -57,7 +57,7 @@ class SubscribeImplTest {
 
         // Given
         Press press = PressFactory.press(1L);
-        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
+        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
 
         // When
@@ -75,7 +75,7 @@ class SubscribeImplTest {
         // Given
         Press press = PressFactory.press(1L);
         Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
+        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
 
         // When
@@ -94,7 +94,7 @@ class SubscribeImplTest {
         // Given
         Press press = PressFactory.press(1L);
         Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
+        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
 
         // When
@@ -110,7 +110,7 @@ class SubscribeImplTest {
 
         // Given
         Press press = PressFactory.press(1L);
-        given(pressRepository.getOrThrow(press.getId())).willReturn(press);
+        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
         given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
 
         // Then

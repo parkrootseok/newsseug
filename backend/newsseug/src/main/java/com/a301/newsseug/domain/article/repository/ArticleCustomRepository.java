@@ -1,30 +1,24 @@
 package com.a301.newsseug.domain.article.repository;
 
-import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveConditionDto;
+import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveCondition;
+import com.a301.newsseug.domain.article.model.dto.response.GetArticleSummaryResponseDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ArticleCustomRepository {
 
-    Slice<Article> findAll(ArticleRetrieveConditionDto conditions, Pageable pageable);
+    Slice<GetArticleSummaryResponseDto> findAllArticlesByCondition(ArticleRetrieveCondition conditions, Pageable pageable);
 
-    Slice<Article> findAllByCategoryAndCreatedAtBetween(String filter, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable);
+    Slice<GetArticleSummaryResponseDto> findAllArticlesByPressAndCondition(ArticleRetrieveCondition conditions, Pageable pageable);
 
-    Slice<Article> findAllByCategory(ArticleRetrieveConditionDto conditions, Pageable pageable);
+    Slice<GetArticleSummaryResponseDto> findAllArticlesBySubscribedPress(List<Press> pressList, ArticleRetrieveCondition conditions, Pageable pageable);
 
-    Slice<Article> findAllByPressAndCategory(Press press, String filter, Pageable pageable);
-
-    Slice<Article> findByPress(List<Press> pressList, String filter, Pageable pageable);
-
-    Slice<Article> findAllByTitleIsContainingIgnoreCase(String keyword, String filter, Pageable pageable);
-
-    Slice<Article> findAllByBirthYearOrderByViewCount(Integer ageBegin, Integer ageEnd, String category, Pageable pageable);
+    Slice<GetArticleSummaryResponseDto> findAllArticlesByTitle(String keyword, Pageable pageable);
 
     void batchUpdateCount(String field, Map<String, Long> countingLog);
 

@@ -7,6 +7,7 @@ public class ErrorMessage {
      * - 응답 상태 코드는 서버가 클라이언트 오류를 감지해 요청 불가
      */
     public static final String FAIL_TO_VALIDATE_MESSAGE = "잘못된 요청입니다.";
+    public static final String ALREADY_EXIST_REACTION_MESSAGE = "이미 존재하는 리액션입니다.";
     public static final String INVALID_PROVIDER_TYPE_MESSAGE = "유효하지 않은 제공자입니다.";
     public static final String INVALID_GENDER_TYPE_MESSAGE = "유효하지 않은 성별입니다.";
     public static final String INVALID_CATEGORY_TYPE_MESSAGE = "유효하지 않은 기사 카테고리입니다.";
@@ -17,6 +18,7 @@ public class ErrorMessage {
      * [401 UnAuthorized]
      * - 요청된 리소스에 대한 유효한 인증 자격 증명이 없음
      */
+    public static final String REQUIRED_LOGIN_MESSAGE = "로그인이 필요합니다.";
     public static final String INACCESSIBLE_FOLDER_MESSAGE = "접근할 수 없는 폴더입니다.";
     public static final String OAUTH_UNLINK_MESSAGE = "OAuth2 연동이 해제되었습니다.";
 

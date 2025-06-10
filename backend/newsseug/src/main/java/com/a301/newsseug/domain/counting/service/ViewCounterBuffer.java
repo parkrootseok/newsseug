@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.counting.service;
 
-import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
+import com.a301.newsseug.domain.counting.repository.CountRedisHashRepository;
 import jakarta.annotation.PreDestroy;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,7 +17,7 @@ public class ViewCounterBuffer {
     private static final int THRESHOLD = 100;
     private static final String REDIS_VIEW_KEY = "article:viewCount:";
 
-    private final ArticleCountRepository countingService;
+    private final CountRedisHashRepository countingService;
 
     // ConcurrentHashMap을 사용하여 멀티 스레드 환경에서도 Thread-safa 유지
     private final ConcurrentHashMap<Long, AtomicLong> buffer = new ConcurrentHashMap<>();

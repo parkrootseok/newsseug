@@ -23,7 +23,6 @@ public record PressDto(
 
 	@Schema(description = "구독자 수")
 	Long subscribeCount
-
 ) {
 
 	public static PressDto of(Press press) {

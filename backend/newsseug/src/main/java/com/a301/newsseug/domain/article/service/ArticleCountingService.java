@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.article.service;
 
-import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
+import com.a301.newsseug.domain.counting.repository.CountRedisHashRepository;
 import com.a301.newsseug.domain.counting.service.ViewCounterBuffer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 public class ArticleCountingService {
 
     private static final String VIEW_COUNT_KEY = "article:viewCount:";
-    private static final String LIKE_COUNT_KEY = "article:likeCount:";
+    private static final String LIKE_COUNT_KEY = "article:count:";
     private static final String HATE_COUNT_KEY = "article:hateCount:";
 
-    private final ArticleCountRepository countRepository;
+    private final CountRedisHashRepository countRepository;
     private final ViewCounterBuffer viewCounterBuffer;
 
     public long increaseViewCount(Long articleId) {

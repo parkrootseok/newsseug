@@ -19,37 +19,11 @@ import java.util.Optional;
 public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleCustomRepository {
 
     default Article findOrThrow(Long id) {
-        return findByIdAndConversionStatusAndActivationStatus(id, ConversionStatus.SUCCESS, ActivationStatus.ACTIVE)
+        return findByIdAndActivationStatusAndConversionStatus(id, ActivationStatus.ACTIVE, ConversionStatus.SUCCESS)
                 .orElseThrow(NotExistArticleException::new);
     }
 
     @EntityGraph(attributePaths = {"press"})
-    Optional<Article> findByIdAndConversionStatusAndActivationStatus(Long id, ConversionStatus conversionStatus, ActivationStatus activationStatus);
-
-    @Query(value = "SELECT a "
-            + "FROM Article a "
-            + "LEFT JOIN FETCH a.press "
-            + "WHERE a.activationStatus = :activationStatus "
-            + "AND a.conversionStatus = :conversionStatus "
-            + "ORDER BY RAND()")
-    Slice<Article> findAllOrderByRandom(
-            @Param("activationStatus") ActivationStatus activationStatus,
-            @Param("conversionStatus") ConversionStatus conversionStatus,
-            Pageable pageable
-    );
-
-    @Query(value = "SELECT a "
-            + "FROM Article a "
-            + "LEFT JOIN FETCH a.press "
-            + "WHERE a.category = :category "
-            + "AND a.activationStatus = :activationStatus "
-            + "AND a.conversionStatus = :conversionStatus "
-            + "ORDER BY RAND()")
-    Slice<Article> findAllByCategoryOrderByRandom(
-            @Param("category") CategoryType categoryType,
-            @Param("activationStatus") ActivationStatus activationStatus,
-            @Param("conversionStatus") ConversionStatus conversionStatus,
-            Pageable pageable
-    );
+    Optional<Article> findByIdAndActivationStatusAndConversionStatus(Long id, ActivationStatus activationStatus, ConversionStatus conversionStatus);
 
 }

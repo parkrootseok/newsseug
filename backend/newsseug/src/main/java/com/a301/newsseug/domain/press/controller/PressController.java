@@ -1,10 +1,10 @@
 package com.a301.newsseug.domain.press.controller;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.press.model.dto.response.GetPressDetailsResponse;
-import com.a301.newsseug.domain.press.model.dto.response.GetPressResponse;
+import com.a301.newsseug.domain.press.model.dto.response.GetPressDetailResponseDto;
+import com.a301.newsseug.domain.press.model.dto.response.GetPressSummaryResponseDto;
 import com.a301.newsseug.domain.press.service.PressService;
-import com.a301.newsseug.global.annotation.NullableUserDetails;
+import com.a301.newsseug.domain.auth.annotation.NullableUserDetails;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 
@@ -37,7 +37,7 @@ public class PressController {
         @ApiResponse(description = "조회 실패", responseCode = "400")
     })
     @GetMapping
-    public ResponseEntity<EntityModel<Result<List<GetPressResponse>>>> getPress(
+    public ResponseEntity<EntityModel<Result<List<GetPressSummaryResponseDto>>>> getPress(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         return ResponseUtil.ok(Result.of(pressService.getPress(userDetails)));
@@ -49,7 +49,7 @@ public class PressController {
         @ApiResponse(description = "조회 실패", responseCode = "400")
     })
     @GetMapping("/{pressId}")
-    public ResponseEntity<EntityModel<Result<GetPressDetailsResponse>>> getPressDetail(
+    public ResponseEntity<EntityModel<Result<GetPressDetailResponseDto>>> getPressDetail(
             @NullableUserDetails CustomUserDetails userDetails,
             @Parameter(name = "pressId") @PathVariable("pressId") Long pressId
     ) {

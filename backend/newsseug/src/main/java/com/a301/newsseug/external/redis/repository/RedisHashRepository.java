@@ -3,13 +3,13 @@ package com.a301.newsseug.external.redis.repository;
 import java.util.Map;
 import java.util.Optional;
 
-public interface RedisHashRepository<H, HK, HV> {
+public interface RedisHashRepository<H, K, V> {
 
-    void save(H hash, HK key, HV value);
-    Map<Object, Object> findByHash(H hash);
+    void save(H hash, K key, V value);
+    Map<K, V> getAndDelByHash(H hash);
     void deleteByHash(H hash);
-    Optional<HV> findByKey(H hash, HK key);
-    void deleteByKey(H hash, HK key);
-    void increment(H hash, HK key, HV value);
+    Optional<V> findByKey(H hash, K key);
+    void deleteByKey(H hash, K key);
+    void increment(H hash, K key, V value);
 
 }

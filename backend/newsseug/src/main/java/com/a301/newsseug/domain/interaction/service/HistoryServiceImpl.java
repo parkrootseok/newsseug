@@ -27,8 +27,8 @@ import com.a301.newsseug.global.model.entity.SliceDetails;
 import lombok.RequiredArgsConstructor;
 
 @Slf4j
-@Transactional
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class HistoryServiceImpl implements HistoryService {
 
@@ -59,25 +59,6 @@ public class HistoryServiceImpl implements HistoryService {
 	}
 
 	@Override
-	public Optional<History> getLatestHistoryByMember(Member member) {
-
-		Pageable pageable = PageRequest.of(
-				0,
-				1,
-				Sort.by(Sort.Direction.DESC, SortingCriteria.CREATED_AT.getField())
-		);
-
-		Page<History> paged = historyRepository.findAllByMember(member, pageable);
-
-		if (paged.hasContent()) {
-			return Optional.of(paged.getContent().get(0));
-		}
-
-		return Optional.empty();
-
-	}
-
-	@Override
 	public SlicedResponse<List<GetHistoryResponse>> getHistories(CustomUserDetails userDetails, int page) {
 
 		Pageable pageable = PageRequest.of(
@@ -94,7 +75,7 @@ public class HistoryServiceImpl implements HistoryService {
 				GetHistoryResponse.of(sliced.getContent())
 		);
 
-
 	}
 
 }
+

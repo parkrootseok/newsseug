@@ -1,7 +1,7 @@
 package com.a301.newsseug.domain.interaction.controller;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.interaction.usecase.ReactionUseCase;
+import com.a301.newsseug.domain.reaction.usecase.ReactionUseCase;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +31,7 @@ public class ReactionController {
     public ResponseEntity<Result<Boolean>> doReactionToArticle(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable(name = "articleId") Long articleId,
-            @RequestParam(defaultValue = "like", value = "type") String type
+            @RequestParam(value = "type") String type
     ) {
         return ResponseUtil.created(Result
                 .of(useCase.doReactionToArticle(userDetails, articleId, type))

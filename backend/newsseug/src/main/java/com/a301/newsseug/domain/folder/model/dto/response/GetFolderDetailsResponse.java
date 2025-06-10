@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.folder.model.dto.response;
 
-import com.a301.newsseug.domain.article.model.dto.response.GetArticleResponse;
+import com.a301.newsseug.domain.article.model.dto.response.GetArticleSummaryResponseDto;
 import com.a301.newsseug.domain.folder.model.entity.Folder;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,11 +19,11 @@ public record GetFolderDetailsResponse(
         String title,
 
         @Schema(description = "스크랩한 기사 목록")
-        SlicedResponse<List<GetArticleResponse>> articles
+        SlicedResponse<List<GetArticleSummaryResponseDto>> articles
 
 ) {
 
-    public static GetFolderDetailsResponse of(Folder folder, SlicedResponse<List<GetArticleResponse>> articles) {
+    public static GetFolderDetailsResponse of(Folder folder, SlicedResponse<List<GetArticleSummaryResponseDto>> articles) {
         return GetFolderDetailsResponse.builder()
                 .id(folder.getId())
                 .title(folder.getTitle())

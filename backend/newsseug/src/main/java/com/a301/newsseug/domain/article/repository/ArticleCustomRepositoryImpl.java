@@ -1,13 +1,13 @@
 package com.a301.newsseug.domain.article.repository;
 
 import static com.a301.newsseug.domain.article.model.entity.QArticle.article;
-import static com.a301.newsseug.domain.article.model.entity.QBirthYearViewCount.birthYearViewCount;
 
-import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveConditionDto;
+import com.a301.newsseug.domain.article.model.dto.ArticleRetrieveCondition;
+import com.a301.newsseug.domain.article.model.dto.response.GetArticleSummaryResponseDto;
+import com.a301.newsseug.domain.article.model.dto.response.QGetArticleSummaryResponseDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
 import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
-import com.a301.newsseug.domain.article.util.ArticleConditionBuilder;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.global.model.entity.ActivationStatus;
 import com.querydsl.core.BooleanBuilder;
@@ -15,14 +15,12 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.CaseBuilder.Cases;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,7 +32,6 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value.Str;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,73 +40,37 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Article> findAll(ArticleRetrieveConditionDto conditions, Pageable pageable) {
-        return executeQuery(ArticleConditionBuilder.build(conditions), pageable);
-    }
-
-    @Override
-    public Slice<Article> findAllByCategory(ArticleRetrieveConditionDto conditions, Pageable pageable) {
-        return executeQuery(ArticleConditionBuilder.build(conditions), pageable);
-    }
-
-    @Override
-    public Slice<Article> findAllByCategoryAndCreatedAtBetween(
-            String filter, LocalDateTime startOfDay, LocalDateTime endOfDay, Pageable pageable
+    public Slice<GetArticleSummaryResponseDto> findAllArticlesByCondition(
+            ArticleRetrieveCondition conditions, Pageable pageable
     ) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        builder.and(article.sourceCreatedAt.between(startOfDay, endOfDay));
-        return executeQuery(builder, pageable);
+        List<GetArticleSummaryResponseDto> articles =
+                createPagingQuery(pageable).where(conditions.toPredicate()).fetch();
+        return toSlice(articles, pageable);
     }
 
     @Override
-    public Slice<Article> findAllByPressAndCategory(Press press, String filter, Pageable pageable) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        builder.and(article.press.eq(press));
-        return executeQuery(builder, pageable);
+    public Slice<GetArticleSummaryResponseDto> findAllArticlesByPressAndCondition(ArticleRetrieveCondition conditions, Pageable pageable) {
+        List<GetArticleSummaryResponseDto> articles =
+                createPagingQuery(pageable).where(conditions.toPredicate()).fetch();
+        return toSlice(articles, pageable);
     }
 
     @Override
-    public Slice<Article> findByPress(List<Press> press, String filter, Pageable pageable) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        builder.and(article.press.in(press));
-        return executeQuery(builder, pageable);
+    public Slice<GetArticleSummaryResponseDto> findAllArticlesBySubscribedPress(List<Press> presses, ArticleRetrieveCondition conditions, Pageable pageable) {
+        List<GetArticleSummaryResponseDto> articles =
+                createPagingQuery(pageable)
+                        .where(conditions.toPredicate().and(article.press.in(presses)))
+                        .fetch();
+        return toSlice(articles, pageable);
     }
 
     @Override
-    public Slice<Article> findAllByTitleIsContainingIgnoreCase(String keyword, String filter, Pageable pageable) {
-        BooleanBuilder builder = createBaseCondition(filter);
-        builder.and(article.title.containsIgnoreCase(keyword));
-        return executeQuery(builder, pageable);
-    }
-
-    public Slice<Article> findAllByBirthYearOrderByViewCount(Integer ageBegin, Integer ageEnd, String category, Pageable pageable) {
-
-        BooleanBuilder builder = createBaseCondition(category);
-        builder.and(
-                Expressions
-                        .numberTemplate(Integer.class, "YEAR(CURRENT_DATE) - {0}", birthYearViewCount.birthYear)
-                        .between(ageBegin, ageEnd)
-        );
-
-        List<Article> content = jpaQueryFactory
-                .selectFrom(article)
-                .leftJoin(article.press).fetchJoin()
-                .join(birthYearViewCount).on(birthYearViewCount.article.eq(article))
-                .where(createBaseCondition())
-                .where(builder)
-                .orderBy(new OrderSpecifier<>(Order.DESC, birthYearViewCount.viewCount))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
-                .fetch();
-
-        boolean hasNext = content.size() > pageable.getPageSize();
-
-        if (hasNext) {
-            content.remove(content.size() - 1);
-        }
-
-        return new SliceImpl<>(content, pageable, hasNext);
-
+    public Slice<GetArticleSummaryResponseDto> findAllArticlesByTitle(String keyword, Pageable pageable) {
+        List<GetArticleSummaryResponseDto> articles =
+                createPagingQuery(pageable)
+                        .where(article.title.containsIgnoreCase(keyword))
+                        .fetch();
+        return toSlice(articles, pageable);
     }
 
     @Override
@@ -174,8 +135,7 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
      * @param pageable 페이징 정보
      * @return Slice<Article>
      */
-    private Slice<Article> executeQuery(BooleanBuilder conditions, Pageable pageable) {
-
+    private Slice<Article> createPagingQuery(BooleanBuilder conditions, Pageable pageable) {
         List<Article> content = jpaQueryFactory
                 .selectFrom(article)
                 .leftJoin(article.press).fetchJoin()
@@ -194,6 +154,30 @@ public class ArticleCustomRepositoryImpl implements ArticleCustomRepository {
 
         return new SliceImpl<>(content, pageable, hasNext);
 
+    }
+
+    private JPAQuery<GetArticleSummaryResponseDto> createPagingQuery(Pageable pageable) {
+        return jpaQueryFactory
+                .select(new QGetArticleSummaryResponseDto(
+                        article.id,
+                        article.pressName,
+                        article.thumbnailUrl,
+                        article.title,
+                        article.viewCount,
+                        article.sourceCreatedAt
+                ))
+                .from(article)
+                .orderBy(article.sourceCreatedAt.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1);
+    }
+
+    private Slice<GetArticleSummaryResponseDto> toSlice(List<GetArticleSummaryResponseDto> content, Pageable pageable) {
+        boolean hasNext = content.size() > pageable.getPageSize();
+        if (hasNext) {
+            content.remove(content.size() - 1);
+        }
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
 }

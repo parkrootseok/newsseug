@@ -1,6 +1,6 @@
 package com.a301.newsseug.global.config;
 
-import com.a301.newsseug.global.resolver.NullableUserDetailsResolver;
+import com.a301.newsseug.domain.auth.resolver.NullableUserDetailsResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

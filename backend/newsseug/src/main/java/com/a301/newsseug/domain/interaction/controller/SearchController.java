@@ -2,8 +2,8 @@ package com.a301.newsseug.domain.interaction.controller;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.interaction.model.dto.response.SearchResponse;
-import com.a301.newsseug.domain.interaction.service.SearchService;
-import com.a301.newsseug.global.annotation.NullableUserDetails;
+import com.a301.newsseug.domain.interaction.usecase.InteractionUseCase;
+import com.a301.newsseug.domain.auth.annotation.NullableUserDetails;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,18 +23,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SearchController {
 
-    private final SearchService searchService;
+    private final InteractionUseCase interactionUseCase;
 
     @Operation(summary = "검색", description = "키워드를 포함하는 언론사, 기사를 조회한다.")
     @GetMapping
     public ResponseEntity<EntityModel<Result<SearchResponse>>> search(
             @NullableUserDetails CustomUserDetails userDetails,
             @RequestParam @NotBlank String keyword,
-            @RequestParam(required = false, defaultValue = "ALL", value = "filter") String filter,
             @RequestParam(required = false, defaultValue = "0") int pageNumber
     ) {
         return ResponseUtil.ok(
-                Result.of(searchService.search(userDetails, keyword, filter, pageNumber))
+                Result.of(interactionUseCase.search(userDetails, keyword, pageNumber))
         );
     }
 

@@ -17,9 +17,9 @@ public class ArticleCacheManager {
     private final CacheManager cacheManager;
     private final ArticleRepository articleRepository;
 
-    @Cacheable(value = "article", key = "#articleId")
-    public Article getCachedArticle(Long articleId) {
-        return articleRepository.findOrThrow(articleId);
+    @Cacheable(value = "article", key = "#id")
+    public Article getCachedArticle(Long id) {
+        return articleRepository.findOrThrow(id);
     }
 
     public void evict(Long id) {

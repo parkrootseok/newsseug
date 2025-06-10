@@ -21,15 +21,17 @@ public class CacheConfig {
 
         List<CaffeineCache> caches =
                 Arrays.stream(CacheTypes.values())
-                        .map(c -> new CaffeineCache(
-                                c.getName(),
-                                Caffeine.newBuilder()
-                                        .maximumSize(c.getMaximumSize())
-                                        .expireAfterWrite(c.getExpireAfterWrite(), TimeUnit.SECONDS)
-                                        .recordStats()
-                                        .build()
-                                )).toList();
+                        .map(c -> {
+                            Caffeine<Object, Object> builder = Caffeine.newBuilder()
+                                    .maximumSize(c.getMaximumSize())
+                                    .recordStats();
 
+                            if (c.getExpireAfterWrite() > 0) {
+                                builder.expireAfterWrite(c.getExpireAfterWrite(), TimeUnit.SECONDS);
+                            }
+
+                            return new CaffeineCache(c.getName(), builder.build());
+                        }).toList();
 
         cacheManager.setCaches(caches);
         return cacheManager;

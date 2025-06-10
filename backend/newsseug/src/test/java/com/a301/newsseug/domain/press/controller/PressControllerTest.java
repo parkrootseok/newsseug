@@ -16,7 +16,7 @@ import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.member.factory.entity.MemberFactory;
 import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.domain.press.factory.PressFactory;
-import com.a301.newsseug.domain.press.model.dto.response.GetPressResponse;
+import com.a301.newsseug.domain.press.model.dto.response.GetPressSummaryResponseDto;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.domain.press.service.PressService;
 
@@ -45,8 +45,8 @@ class PressControllerTest {
 		Press press1 = PressFactory.press(0L);
 		Press press2 = PressFactory.press(1L);
 
-		List<GetPressResponse> getPressResponseList = Stream.of(press1, press2).map(p -> GetPressResponse.of(p, true)).toList();
-		given(pressService.getPress(customUserDetails)).willReturn(getPressResponseList);
+		List<GetPressSummaryResponseDto> getPressSummaryResponseDtoList = Stream.of(press1, press2).map(p -> GetPressSummaryResponseDto.of(p, true)).toList();
+		given(pressService.getPress(customUserDetails)).willReturn(getPressSummaryResponseDtoList);
 
 		// When&Then
 		mockMvc.perform(get("/api/v1/press")
@@ -72,8 +72,8 @@ class PressControllerTest {
 
 		Press press1 = PressFactory.press(0L);
 		Press press2 = PressFactory.press(1L);
-		List<GetPressResponse> getPressResponseList = Stream.of(press1, press2).map(p -> GetPressResponse.of(p, false)).toList();
-		given(pressService.getPress(customUserDetails)).willReturn(getPressResponseList);
+		List<GetPressSummaryResponseDto> getPressSummaryResponseDtoList = Stream.of(press1, press2).map(p -> GetPressSummaryResponseDto.of(p, false)).toList();
+		given(pressService.getPress(customUserDetails)).willReturn(getPressSummaryResponseDtoList);
 
 		// When&Then
 		mockMvc.perform(get("/api/v1/press")
@@ -100,11 +100,11 @@ class PressControllerTest {
 		Press press1 = PressFactory.press(0L);
 		Press press2 = PressFactory.press(1L);
 
-		List<GetPressResponse> getPressResponseList = List.of(
-				GetPressResponse.of(press1, true), GetPressResponse.of(press2, false)
+		List<GetPressSummaryResponseDto> getPressSummaryResponseDtoList = List.of(
+				GetPressSummaryResponseDto.of(press1, true), GetPressSummaryResponseDto.of(press2, false)
 		);
 
-		given(pressService.getPress(customUserDetails)).willReturn(getPressResponseList);
+		given(pressService.getPress(customUserDetails)).willReturn(getPressSummaryResponseDtoList);
 
 		// When&Then
 		mockMvc.perform(get("/api/v1/press")

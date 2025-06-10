@@ -7,21 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CacheTypes {
 
-    ARTICLE("article");
+    ARTICLE("article", 1024, 300),
+    PRESS("press", 1024, 0);
 
-    static class CacheConfig {
-        static final Integer DEFAULT_MAX_SIZE = 1000;
-        static final Integer DEFAULT_TTL_SEC = 60;
-    }
-
-    private String name;
-    private Integer maximumSize;
-    private Integer expireAfterWrite;
-
-    CacheTypes(String name) {
-        this.name = name;
-        this.maximumSize = CacheConfig.DEFAULT_MAX_SIZE;
-        this.expireAfterWrite = CacheConfig.DEFAULT_TTL_SEC;
-    }
+    private final String name;
+    private final int maximumSize;
+    private final int expireAfterWrite;
 
 }

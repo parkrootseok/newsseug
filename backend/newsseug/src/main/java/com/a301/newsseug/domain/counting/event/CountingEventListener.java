@@ -1,6 +1,6 @@
 package com.a301.newsseug.domain.counting.event;
 
-import com.a301.newsseug.domain.counting.repository.ArticleCountRepository;
+import com.a301.newsseug.domain.counting.repository.CountRedisHashRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -10,7 +10,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @RequiredArgsConstructor
 public class CountingEventListener {
 
-    private final ArticleCountRepository countingService;
+    private final CountRedisHashRepository countingService;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleCountingEvent(ReactionCountingEvent event) {
