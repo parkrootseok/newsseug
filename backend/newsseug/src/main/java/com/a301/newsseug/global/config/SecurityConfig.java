@@ -2,12 +2,12 @@ package com.a301.newsseug.global.config;
 
 import static com.a301.newsseug.domain.member.model.entity.type.RoleType.*;
 
+import com.a301.newsseug.domain.auth.usecase.AuthUseCase;
+import com.a301.newsseug.external.jwt.usecase.JwtUseCase;
 import com.a301.newsseug.external.oauth.service.CustomOAuth2UserService;
-import com.a301.newsseug.domain.auth.service.CustomUserDetailsService;
 import com.a301.newsseug.external.jwt.filter.JwtAuthenticationFilter;
 import com.a301.newsseug.external.jwt.handler.JwtAccessDeniedHandler;
 import com.a301.newsseug.external.jwt.handler.JwtAuthenticationEntryPoint;
-import com.a301.newsseug.external.jwt.service.JwtService;
 import com.a301.newsseug.external.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +37,9 @@ public class SecurityConfig {
             "/swagger-resources/**"
     };
 
-    private final JwtService jwtService;
+    private final AuthUseCase authUseCase;
+    private final JwtUseCase jwtUseCase;
     private final CustomOAuth2UserService oAuth2UserService;
-    private final CustomUserDetailsService userDetailsService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtAccessDeniedHandler accessDeniedHandler;
     private final JwtAuthenticationEntryPoint authenticationEntryPoint;
@@ -49,58 +49,45 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
         return http
-
                 .httpBasic(AbstractHttpConfigurer::disable)
-
                 .formLogin(AbstractHttpConfigurer::disable)
-
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
-
-                .headers(header ->
-                        header.frameOptions(
-                                FrameOptionsConfig::sameOrigin
-                        ))
-
-                .sessionManagement(sessionManagementConfigurer
-                        -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .authorizeHttpRequests(requestConfigurer ->
-
-                        requestConfigurer
-
-                                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                                .requestMatchers("/newsseug/**").permitAll()
-                                .requestMatchers(SWAGGER_URI).permitAll()
-
-                                .requestMatchers("/api/v1/members/**").hasRole(ROLE_MEMBER.getRole())
-                                .requestMatchers("/api/v1/folders/**").hasRole(ROLE_MEMBER.getRole())
-                                .requestMatchers("/api/v1/press").hasRole(ROLE_MEMBER.getRole())
-                                .requestMatchers("/api/v1/articles/random").hasRole(ROLE_MEMBER.getRole())
-
-                                .requestMatchers("/api/v1/auth/**").permitAll()
-                                .requestMatchers("/api/v1/press/*").permitAll()
-                                .requestMatchers("/api/v1/articles/**").permitAll()
-                                .requestMatchers("/api/v1/s3/**").permitAll()
-                                .requestMatchers("/api/v1/search/**").permitAll()
-
-                                .anyRequest().authenticated()
-
+                .headers(
+                        header ->
+                                header.frameOptions(FrameOptionsConfig::sameOrigin)
                 )
-
+                .sessionManagement(
+                        sessionManagementConfigurer ->
+                                sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .authorizeHttpRequests(
+                        requestConfigurer ->
+                                requestConfigurer
+                                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                                        .requestMatchers(SWAGGER_URI).permitAll()
+                                        .requestMatchers("/newsseug/**").permitAll()
+                                        .requestMatchers("/api/v1/members/**").hasRole(ROLE_MEMBER.getRole())
+                                        .requestMatchers("/api/v1/folders/**").hasRole(ROLE_MEMBER.getRole())
+                                        .requestMatchers("/api/v1/press").hasRole(ROLE_MEMBER.getRole())
+                                        .requestMatchers("/api/v1/articles/random").hasRole(ROLE_MEMBER.getRole())
+                                        .requestMatchers("/api/v1/auth/**").permitAll()
+                                        .requestMatchers("/api/v1/press/*").permitAll()
+                                        .requestMatchers("/api/v1/articles/**").permitAll()
+                                        .requestMatchers("/api/v1/s3/**").permitAll()
+                                        .requestMatchers("/api/v1/search/**").permitAll()
+                                        .anyRequest().authenticated()
+                )
                 .oauth2Login(
                         configurer ->
                                 configurer
-                                        .userInfoEndpoint(
-                                                endpointConfig ->
-                                                        endpointConfig.userService(oAuth2UserService)
-                                        )
+                                        .userInfoEndpoint(endpointConfig -> endpointConfig.userService(oAuth2UserService))
                                         .successHandler(oAuth2AuthenticationSuccessHandler)
                 )
-
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-
+                .addFilterBefore(
+                        new JwtAuthenticationFilter(authUseCase, jwtUseCase),
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .exceptionHandling(
                         handling ->
                                 handling.accessDeniedHandler(accessDeniedHandler)
@@ -117,25 +104,15 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(
-                List.of(
-                        "http://localhost:3000",
-                        "https://newsseug.vercel.app"
-                )
-        );
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setExposedHeaders(List.of("*"));
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-
         return source;
-
     }
 
 }
