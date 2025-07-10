@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum JwtTokenErrorCode implements ErrorCode {
 
+    TOKEN_MISSING(HttpStatus.FORBIDDEN, "토큰이 존재하지 않습니다."),
     TOKEN_EXPIRED(HttpStatus.FORBIDDEN, "만료된 토큰입니다."),
     TOKEN_UNTRUSTWORTHY(HttpStatus.FORBIDDEN, "신뢰할 수 없는 토큰입니다."),
     TOKEN_ISSUE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "토큰 발급을 실패했습니다."),

@@ -19,22 +19,14 @@ public class JwtUseCase {
 
     private final JwtTokenParser jwtTokenParser;
 
-    public boolean verify(String token) throws JwtTokenException {
-        if (Objects.isNull(token)) {
-            return false;
-        }
+    public Claims extractClaims(String token) {
         try {
-            jwtTokenParser.parseClaims(token);
-            return true;
+            return jwtTokenParser.parseClaims(token);
         } catch (ExpiredJwtException e) {
             throw new JwtTokenException(JwtTokenErrorCode.TOKEN_EXPIRED);
         } catch (SignatureException | MalformedJwtException e) {
             throw new JwtTokenException(JwtTokenErrorCode.TOKEN_UNTRUSTWORTHY);
         }
-    }
-
-    public Claims extractClaims(String token) {
-        return jwtTokenParser.parseClaims(token);
     }
 
 }
