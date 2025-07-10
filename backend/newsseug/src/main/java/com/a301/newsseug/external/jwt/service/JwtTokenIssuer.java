@@ -19,7 +19,7 @@ public class JwtTokenIssuer {
 
     private final JwtTokenProperties jwtTokenProperties;
 
-    public JwtToken issueAccessToken(Long providerId) {
+    public JwtToken issueAccessToken(String providerId) {
         return JwtToken.of(
                 JwtTokenType.ACCESS_TOKEN,
                 issueToken(JwtTokenType.ACCESS_TOKEN, providerId, jwtTokenProperties.expiration().access()),
@@ -27,7 +27,7 @@ public class JwtTokenIssuer {
         );
     }
 
-    public JwtToken issueRefreshToken(Long providerId) {
+    public JwtToken issueRefreshToken(String providerId) {
         return JwtToken.of(
                 JwtTokenType.REFRESH_TOKEN,
                 issueToken(JwtTokenType.REFRESH_TOKEN, providerId, jwtTokenProperties.expiration().refresh()),
@@ -35,13 +35,13 @@ public class JwtTokenIssuer {
         );
     }
 
-    private String issueToken(JwtTokenType type, Long memberId, long expiration) {
+    private String issueToken(JwtTokenType type, String providerId, long expiration) {
         LocalDateTime now = ClockUtil.getLocalDateTime();
         return Jwts.builder()
                 .header()
                 .add("type", type)
                 .and()
-                .subject(String.valueOf(memberId))
+                .subject(String.valueOf(providerId))
                 .issuedAt(ClockUtil.convertToDate(now))
                 .expiration(ClockUtil.getExpirationDate(now, expiration))
                 .signWith(Keys.hmacShaKeyFor(jwtTokenProperties.secret().getBytes(StandardCharsets.UTF_8)))

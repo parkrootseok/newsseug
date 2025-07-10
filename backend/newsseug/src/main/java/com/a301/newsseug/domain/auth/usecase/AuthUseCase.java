@@ -1,5 +1,7 @@
 package com.a301.newsseug.domain.auth.usecase;
 
+import com.a301.newsseug.domain.auth.error.AuthException;
+import com.a301.newsseug.domain.auth.error.enums.AuthErrorCode;
 import com.a301.newsseug.domain.auth.model.dto.response.LoginResponse;
 import com.a301.newsseug.domain.auth.model.dto.response.ReissueTokenResponse;
 import com.a301.newsseug.domain.auth.service.CustomUserDetailsService;
@@ -29,7 +31,7 @@ public class AuthUseCase {
     private final RedisJwtRefreshTokenStore redisJwtRefreshTokenStore;
     private final MemberRepository memberRepository;
 
-    public LoginResponse login(Long providerId) {
+    public LoginResponse login(String providerId) {
         Member member = memberRepository.getOrThrow(String.valueOf(providerId));
         JwtToken accessToken = jwtTokenIssuer.issueAccessToken(providerId);
         JwtToken refreshToken = jwtTokenIssuer.issueRefreshToken(providerId);
@@ -37,11 +39,14 @@ public class AuthUseCase {
         return LoginResponse.of(accessToken.value(), refreshToken.value(), member.getIsFirst());
     }
 
-    public Boolean logout(Long providerId) {
+    public Boolean logout(Member member, String providerId) {
+        if (!member.getOAuth2Details().getProviderId().equals(providerId)) {
+            throw new AuthException(AuthErrorCode.AUTHENTICATION_MISMATCH);
+        }
         return redisJwtRefreshTokenStore.invalidateTokenByMemberId(providerId);
     }
 
-    public ReissueTokenResponse reissue(String tokenFromClient, Long providerId) {
+    public ReissueTokenResponse reissue(String tokenFromClient, String providerId) {
         String savedToken = redisJwtRefreshTokenStore.getTokenByMemberId(providerId);
         if (!MessageDigest
                 .isEqual(tokenFromClient.getBytes(StandardCharsets.UTF_8), savedToken.getBytes(StandardCharsets.UTF_8))
