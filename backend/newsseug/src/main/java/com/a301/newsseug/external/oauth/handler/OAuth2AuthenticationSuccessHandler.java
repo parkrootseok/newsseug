@@ -22,17 +22,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication
-    ) throws IOException, ServletException {
-
+    ) throws IOException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-
         String redirectUrl = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("isFirst", oAuth2User.getMember().getIsFirst())
                 .queryParam("providerId", oAuth2User.getMember().getOAuth2Details().getProviderId())
-                .build().toUriString();
-
+                .build()
+                .toUriString();
         response.sendRedirect(redirectUrl);
-
     }
 
 }
