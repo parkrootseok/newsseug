@@ -32,7 +32,7 @@ public class AuthUseCase {
     private final MemberRepository memberRepository;
 
     public LoginResponse login(String providerId) {
-        Member member = memberRepository.getOrThrow(String.valueOf(providerId));
+        Member member = memberRepository.getOrThrow(providerId);
         JwtToken accessToken = jwtTokenIssuer.issueAccessToken(providerId);
         JwtToken refreshToken = jwtTokenIssuer.issueRefreshToken(providerId);
         redisJwtRefreshTokenStore.store(providerId, refreshToken.value(), refreshToken.duration());
@@ -59,7 +59,7 @@ public class AuthUseCase {
     public void registerAuthenticatedUser(String subject) {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(subject);
         UsernamePasswordAuthenticationToken authentication
-                = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
+                = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
