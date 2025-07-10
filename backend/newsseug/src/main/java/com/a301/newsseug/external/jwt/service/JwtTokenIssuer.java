@@ -19,18 +19,18 @@ public class JwtTokenIssuer {
 
     private final JwtTokenProperties jwtTokenProperties;
 
-    public JwtToken issueAccessToken(Long memberId) {
+    public JwtToken issueAccessToken(Long providerId) {
         return JwtToken.of(
                 JwtTokenType.ACCESS_TOKEN,
-                issueToken(JwtTokenType.ACCESS_TOKEN, memberId, jwtTokenProperties.expiration().access()),
+                issueToken(JwtTokenType.ACCESS_TOKEN, providerId, jwtTokenProperties.expiration().access()),
                 jwtTokenProperties.accessTokenDuration()
         );
     }
 
-    public JwtToken issueRefreshToken(Long memberId) {
+    public JwtToken issueRefreshToken(Long providerId) {
         return JwtToken.of(
                 JwtTokenType.REFRESH_TOKEN,
-                issueToken(JwtTokenType.REFRESH_TOKEN, memberId, jwtTokenProperties.expiration().refresh()),
+                issueToken(JwtTokenType.REFRESH_TOKEN, providerId, jwtTokenProperties.expiration().refresh()),
                 jwtTokenProperties.refreshTokenDuration()
         );
     }
