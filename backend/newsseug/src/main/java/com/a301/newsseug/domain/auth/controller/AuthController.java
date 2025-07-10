@@ -3,7 +3,7 @@ package com.a301.newsseug.domain.auth.controller;
 import com.a301.newsseug.domain.auth.model.dto.response.ReissueTokenResponse;
 import com.a301.newsseug.domain.auth.model.dto.response.LoginResponse;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.auth.service.AuthService;
+import com.a301.newsseug.domain.auth.usecase.AuthUseCase;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthUseCase authUseCase;
 
     @Operation(summary = "로그인 API", description = "로그인을 수행한다.")
     @GetMapping("/login")
@@ -33,7 +33,7 @@ public class AuthController {
             @RequestParam("providerId") @NotBlank String providerId
     ) {
         return ResponseUtil.ok(
-                Result.of(authService.login(providerId))
+                Result.of(authUseCase.login(providerId))
         );
     }
 
@@ -41,10 +41,10 @@ public class AuthController {
     @GetMapping("/logout")
     public ResponseEntity<EntityModel<Result<Boolean>>> logout(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("providerId") String providerId
+            @RequestParam("providerId") @NotBlank String providerId
     ) {
         return ResponseUtil.ok(
-                Result.of(authService.logout(userDetails, providerId))
+                Result.of(authUseCase.logout(userDetails.getMember(), providerId))
         );
     }
 
@@ -52,10 +52,10 @@ public class AuthController {
     @GetMapping("/reissue")
     public ResponseEntity<EntityModel<Result<ReissueTokenResponse>>> issueAccessToken(
             @RequestHeader("refresh-token") String refreshToken,
-            @RequestParam("providerId") String providerId
+            @RequestParam("providerId") @NotBlank String providerId
     ) {
         return ResponseUtil.ok(
-                Result.of(authService.reissueToken(refreshToken, providerId))
+                Result.of(authUseCase.reissue(refreshToken, providerId))
         );
     }
 

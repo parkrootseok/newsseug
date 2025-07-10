@@ -1,10 +1,10 @@
-package com.a301.newsseug.global.handler;
+package com.a301.newsseug.global.error.handler;
 
 import static com.a301.newsseug.global.constant.StringFormat.VALIDATED_ERROR_RESULT;
 import static com.a301.newsseug.global.constant.StringFormat.VALID_ERROR_RESULT;
-import static com.a301.newsseug.global.exception.ErrorCode.FAIL_TO_VALIDATE;
+import static com.a301.newsseug.global.exception.ErrorCodes.FAIL_TO_VALIDATE;
 
-import com.a301.newsseug.global.exception.ErrorCode;
+import com.a301.newsseug.global.exception.ErrorCodes;
 import com.a301.newsseug.global.exception.BaseException;
 import jakarta.annotation.Nullable;
 import jakarta.validation.ConstraintViolation;
@@ -38,13 +38,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             BaseException e, WebRequest request
     ) {
 
-        ErrorCode errorCode = e.getErrorCode();
+        ErrorCodes errorCodes = e.getErrorCodes();
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
 
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(errorCodes.getStatus())
                 .body(ErrorResponse
-                        .builder(e, errorCode.getStatus(), errorCode.getMessage())
+                        .builder(e, errorCodes.getStatus(), errorCodes.getMessage())
                         .title(e.getClass().getSimpleName())
                         .instance(URI.create(servletWebRequest.getRequest().getRequestURI()))
                         .build());
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException e, HttpHeaders headers, HttpStatusCode status, WebRequest request
     ) {
 
-        ErrorCode errorCode = FAIL_TO_VALIDATE;
+        ErrorCodes errorCodes = FAIL_TO_VALIDATE;
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
 
         BindingResult bindingResult = e.getBindingResult();
@@ -91,9 +91,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 );
 
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(errorCodes.getStatus())
                 .body(ErrorResponse
-                        .builder(e, errorCode.getStatus(), errorCode.getMessage())
+                        .builder(e, errorCodes.getStatus(), errorCodes.getMessage())
                         .title(e.getClass().getSimpleName())
                         .instance(URI.create(servletWebRequest.getRequest().getRequestURI()))
                         .property("error", errors)
@@ -105,7 +105,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHandlerMethodValidationException(
             HandlerMethodValidationException e, HttpHeaders headers, HttpStatusCode status, WebRequest request
     ) {
-        ErrorCode errorCode = FAIL_TO_VALIDATE;
+        ErrorCodes errorCodes = FAIL_TO_VALIDATE;
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
 
         List<String> errors = new ArrayList<>();
@@ -123,9 +123,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
 
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(errorCodes.getStatus())
                 .body(ErrorResponse
-                        .builder(e, errorCode.getStatus(), errorCode.getMessage())
+                        .builder(e, errorCodes.getStatus(), errorCodes.getMessage())
                         .title(e.getClass().getSimpleName())
                         .instance(URI.create(servletWebRequest.getRequest().getRequestURI()))
                         .property("error", errors)
@@ -137,7 +137,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ConstraintViolationException e, WebRequest request
     ) {
 
-        ErrorCode errorCode = FAIL_TO_VALIDATE;
+        ErrorCodes errorCodes = FAIL_TO_VALIDATE;
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
 
         List<String> errors = new ArrayList<>();
@@ -154,9 +154,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 );
 
         return ResponseEntity
-                .status(errorCode.getStatus())
+                .status(errorCodes.getStatus())
                 .body(ErrorResponse
-                        .builder(e, errorCode.getStatus(), errorCode.getMessage())
+                        .builder(e, errorCodes.getStatus(), errorCodes.getMessage())
                         .title(e.getClass().getSimpleName())
                         .instance(URI.create(servletWebRequest.getRequest().getRequestURI()))
                         .property("error", errors)
