@@ -1,6 +1,5 @@
 package com.a301.newsseug.global.error;
 
-import com.a301.newsseug.global.exception.ErrorCodes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
