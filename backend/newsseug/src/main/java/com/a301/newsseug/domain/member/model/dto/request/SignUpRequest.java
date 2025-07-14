@@ -16,7 +16,7 @@ public record SignUpRequest(
         String gender,
 
         @Schema(description = "생년월일", defaultValue = "19971030", examples = {"19971030"})
-        @Pattern(regexp = "\\d{8}", message = "생년월일은 yyyymmdd 형식의 8자리 숫자여야 합니다.")
+        @Pattern(regexp = "^(19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])$", message = "생년월일은 yyyymmdd 형식의 유효한 날짜여야 합니다.")
         String birth,
 
         @Schema(description = "프로필 이미지 URL", defaultValue = "https://...")
