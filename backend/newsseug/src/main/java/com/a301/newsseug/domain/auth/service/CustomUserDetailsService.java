@@ -20,10 +20,8 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
 
     @Override
     public UserDetails loadUserByUsername(String providerId) throws UsernameNotFoundException {
-
         Member member = memberRepository.getOrThrow(providerId);
         return CustomUserDetails.of(member);
-
     }
 
 }
