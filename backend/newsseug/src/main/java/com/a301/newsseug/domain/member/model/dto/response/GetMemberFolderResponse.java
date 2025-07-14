@@ -3,9 +3,10 @@ package com.a301.newsseug.domain.member.model.dto.response;
 import com.a301.newsseug.domain.folder.model.entity.Folder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Builder;
 
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
 @Schema(name = "폴더 정보", description = "목록 조회시 노출할 폴더 정보")
 public record GetMemberFolderResponse(
 
