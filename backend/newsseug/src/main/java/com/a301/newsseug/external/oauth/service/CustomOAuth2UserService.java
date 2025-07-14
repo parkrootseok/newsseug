@@ -59,5 +59,5 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             case GOOGLE -> new GoogleUserDetails(oAuth2User.getAttributes());
         };
     }
-    
+
 }

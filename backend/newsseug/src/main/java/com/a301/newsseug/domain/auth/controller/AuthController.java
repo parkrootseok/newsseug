@@ -1,7 +1,6 @@
 package com.a301.newsseug.domain.auth.controller;
 
 import com.a301.newsseug.domain.auth.model.dto.response.ReissueTokenResponse;
-import com.a301.newsseug.domain.auth.model.dto.response.LoginResponse;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.auth.usecase.AuthUseCase;
 import com.a301.newsseug.global.model.dto.Result;
@@ -26,16 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthUseCase authUseCase;
-
-    @Operation(summary = "로그인 API", description = "로그인을 수행한다.")
-    @GetMapping("/login")
-    public ResponseEntity<EntityModel<Result<LoginResponse>>> login(
-            @RequestParam("providerId") @NotBlank String providerId
-    ) {
-        return ResponseUtil.ok(
-                Result.of(authUseCase.login(providerId))
-        );
-    }
 
     @Operation(summary = "로그아웃 API", description = "로그아웃을 수행한다.")
     @GetMapping("/logout")

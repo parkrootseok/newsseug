@@ -2,13 +2,12 @@ package com.a301.newsseug.domain.auth.usecase;
 
 import com.a301.newsseug.domain.auth.error.AuthException;
 import com.a301.newsseug.domain.auth.error.enums.AuthErrorCode;
-import com.a301.newsseug.domain.auth.model.dto.response.LoginResponse;
 import com.a301.newsseug.domain.auth.model.dto.response.ReissueTokenResponse;
 import com.a301.newsseug.domain.auth.service.CustomUserDetailsService;
 import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.domain.member.repository.MemberRepository;
 import com.a301.newsseug.external.jwt.error.JwtTokenException;
 import com.a301.newsseug.external.jwt.error.enums.JwtTokenErrorCode;
+import com.a301.newsseug.external.jwt.model.dto.JwtTokenPair;
 import com.a301.newsseug.external.jwt.model.entity.JwtToken;
 import com.a301.newsseug.external.jwt.service.JwtTokenIssuer;
 import com.a301.newsseug.external.jwt.service.RedisJwtRefreshTokenStore;
@@ -30,11 +29,11 @@ public class AuthUseCase {
     private final CustomUserDetailsService customUserDetailsService;
     private final RedisJwtRefreshTokenStore redisJwtRefreshTokenStore;
 
-    public LoginResponse login(String providerId) {
+    public JwtTokenPair login(String providerId) {
         JwtToken accessToken = jwtTokenIssuer.issueAccessToken(providerId);
         JwtToken refreshToken = jwtTokenIssuer.issueRefreshToken(providerId);
         redisJwtRefreshTokenStore.store(providerId, refreshToken.value(), refreshToken.duration());
-        return LoginResponse.of(accessToken.value(), refreshToken.value());
+        return JwtTokenPair.of(accessToken, refreshToken);
     }
 
     public Boolean logout(Member member, String providerId) {

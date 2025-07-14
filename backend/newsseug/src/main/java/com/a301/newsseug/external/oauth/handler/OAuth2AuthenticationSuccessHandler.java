@@ -1,10 +1,15 @@
 package com.a301.newsseug.external.oauth.handler;
 
+import com.a301.newsseug.domain.auth.usecase.AuthUseCase;
+import com.a301.newsseug.domain.member.model.entity.Member;
+import com.a301.newsseug.domain.member.model.entity.type.RoleType;
+import com.a301.newsseug.external.jwt.model.dto.JwtTokenPair;
+import com.a301.newsseug.external.jwt.model.entity.enums.JwtTokenType;
 import com.a301.newsseug.external.oauth.model.entity.CustomOAuth2User;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -16,6 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
+    private final AuthUseCase authUseCase;
+
     @Value("${app.client.base-url}")
     private String url;
 
@@ -24,12 +31,25 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletRequest request, HttpServletResponse response, Authentication authentication
     ) throws IOException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-        String redirectUrl = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("isFirst", oAuth2User.getMember().getIsFirst())
-                .queryParam("providerId", oAuth2User.getMember().getOAuth2Details().getProviderId())
-                .build()
-                .toUriString();
-        response.sendRedirect(redirectUrl);
+        Member member = oAuth2User.getMember();
+        JwtTokenPair jwtTokenPair = authUseCase.login(member.getOAuth2Details().getProviderId());
+
+        if (RoleType.ROLE_GUEST.equals(member.getRole())) {
+            response.addHeader(JwtTokenType.ACCESS_TOKEN.getValue(), jwtTokenPair.accessToken().value());
+            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/sign-up")
+                    .build()
+                    .encode(StandardCharsets.UTF_8)
+                    .toUriString();
+            response.sendRedirect(redirectUrl);
+        } else {
+            response.addHeader(JwtTokenType.ACCESS_TOKEN.getValue(), jwtTokenPair.accessToken().value());
+            response.addHeader(JwtTokenType.REFRESH_TOKEN.getValue(), jwtTokenPair.refreshToken().value());
+            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:8080")
+                    .build()
+                    .encode(StandardCharsets.UTF_8)
+                    .toUriString();
+            response.sendRedirect(redirectUrl);
+        }
     }
 
 }
