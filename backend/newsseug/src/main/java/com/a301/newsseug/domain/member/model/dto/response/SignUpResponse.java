@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-@Schema(name = "사용자 정보 수정 응답")
+@Schema(name = "회원 가입 응답")
 public record SignUpResponse(Long memberId) {
         public static SignUpResponse of(Long memberId) {
                 return SignUpResponse.builder()
