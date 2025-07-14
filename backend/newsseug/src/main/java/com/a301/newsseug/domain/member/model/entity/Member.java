@@ -24,7 +24,7 @@ import lombok.Setter;
 @Entity
 @Table(
         name = "members",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"provider", "provider_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"oauth2_details_provider", "oauth2_details_provider_id"})
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
