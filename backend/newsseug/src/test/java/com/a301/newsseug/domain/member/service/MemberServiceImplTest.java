@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.member.factory.entity.MemberFactory;
 import com.a301.newsseug.domain.member.factory.dto.MemberRequestFactory;
-import com.a301.newsseug.domain.member.model.dto.request.UpdateMemberRequest;
+import com.a301.newsseug.domain.member.model.dto.request.SignUpRequest;
 import com.a301.newsseug.domain.member.model.dto.response.GetMemberResponse;
 import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.domain.member.model.entity.type.GenderType;
@@ -46,10 +46,10 @@ class MemberServiceImplTest {
 
     @Test
     @DisplayName("정보 조회[성공]")
-    void getMember() {
+    void retrieveMemberDetails() {
 
         // When
-        GetMemberResponse response = memberService.getMember(userDetails);
+        GetMemberResponse response = memberService.retrieveMemberDetails(userDetails);
 
         // Then
         assertThat(loginMember.getNickname()).isEqualTo(response.nickname());
@@ -60,19 +60,19 @@ class MemberServiceImplTest {
 
     @Test
     @DisplayName("정보 수정[성공]")
-    void updateMember() {
+    void signUp() {
 
         // Given
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        UpdateMemberRequest request = MemberRequestFactory.updateMemberRequest();
+        SignUpRequest request = MemberRequestFactory.updateMemberRequest();
         given(memberRepository.getOrThrow(loginMember.getOAuth2Details().getProviderId())).willReturn(loginMember);
 
         // When
-        memberService.updateMember(userDetails, request);
+        memberService.signUp(userDetails, request);
 
         // Then
         assertThat(loginMember.getNickname()).isEqualTo(request.nickname());
-        assertThat(loginMember.getGender()).isEqualTo(GenderType.convertToEnum(request.gender()));
+        assertThat(loginMember.getGender()).isEqualTo(GenderType.from(request.gender()));
         assertThat(loginMember.getBirth()).isEqualTo(LocalDate.parse(request.birth(), formatter));
 
     }

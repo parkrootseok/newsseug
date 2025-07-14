@@ -36,4 +36,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             @Param("providerId") String providerId
     );
 
+    Boolean existsByNickname(String nickname);
+
 }

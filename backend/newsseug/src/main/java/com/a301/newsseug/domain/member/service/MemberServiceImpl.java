@@ -1,8 +1,10 @@
 package com.a301.newsseug.domain.member.service;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.member.model.dto.request.UpdateMemberRequest;
+import com.a301.newsseug.domain.member.exception.DuplicateNicknameException;
+import com.a301.newsseug.domain.member.model.dto.request.SignUpRequest;
 import com.a301.newsseug.domain.member.model.dto.response.GetMemberResponse;
+import com.a301.newsseug.domain.member.model.dto.response.SignUpResponse;
 import com.a301.newsseug.domain.member.model.entity.type.GenderType;
 import com.a301.newsseug.domain.member.model.entity.Member;
 import com.a301.newsseug.domain.member.repository.MemberRepository;
@@ -21,39 +23,36 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private static final DateTimeFormatter BIRTH_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+
     private final MemberRepository memberRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public GetMemberResponse getMember(CustomUserDetails userDetails) {
+    public GetMemberResponse retrieveMemberDetails(CustomUserDetails userDetails) {
         return GetMemberResponse.of(userDetails.getMember());
     }
 
     @Override
-    public void updateMember(CustomUserDetails userDetails, UpdateMemberRequest request) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        Member loginMember = userDetails.getMember();
-        loginMember = memberRepository.getOrThrow(loginMember.getOAuth2Details().getProviderId());
-
+    public SignUpResponse signUp(CustomUserDetails userDetails, SignUpRequest request) {
+        Member member = userDetails.getMember();
         if (Strings.hasText(request.birth())) {
-            loginMember.setBirth(LocalDate.parse(request.birth(), formatter));
+            member.setBirth(LocalDate.parse(request.birth(), BIRTH_FORMATTER));
         }
-
         if (Strings.hasText(request.gender())) {
-            loginMember.setGender(GenderType.convertToEnum(request.gender()));
+            member.setGender(GenderType.from(request.gender()));
         }
-
         if (Strings.hasText(request.nickname())) {
-            loginMember.setNickname(request.nickname());
+            if (!request.nickname().equals(member.getNickname()) && memberRepository.existsByNickname(request.nickname())) {
+                throw new DuplicateNicknameException();
+            }
+            member.setNickname(request.nickname());
         }
-
         if (Strings.hasText(request.profileImageUrl())) {
-            loginMember.setProfileImageUrl(request.profileImageUrl());
+            member.setProfileImageUrl(request.profileImageUrl());
         }
-
-        loginMember.setIsFirst(false);
-
+        member.promoteToMember();
+        return SignUpResponse.of(member.getId());
     }
 
 }

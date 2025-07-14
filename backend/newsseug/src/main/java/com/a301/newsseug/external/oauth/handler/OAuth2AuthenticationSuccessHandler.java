@@ -36,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         if (RoleType.ROLE_GUEST.equals(member.getRole())) {
             response.addHeader(JwtTokenType.ACCESS_TOKEN.getValue(), jwtTokenPair.accessToken().value());
-            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/sign-up")
+            String redirectUrl = UriComponentsBuilder.fromUriString(url)
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
@@ -44,7 +44,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         } else {
             response.addHeader(JwtTokenType.ACCESS_TOKEN.getValue(), jwtTokenPair.accessToken().value());
             response.addHeader(JwtTokenType.REFRESH_TOKEN.getValue(), jwtTokenPair.refreshToken().value());
-            String redirectUrl = UriComponentsBuilder.fromUriString("http://localhost:8080")
+            String redirectUrl = UriComponentsBuilder.fromUriString(url)
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();

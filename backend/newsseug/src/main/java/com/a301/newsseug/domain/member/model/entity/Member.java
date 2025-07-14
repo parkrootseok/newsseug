@@ -63,4 +63,8 @@ public class Member extends BaseEntity {
         return new Member(OAuth2Details.of(provider, providerId), RoleType.ROLE_GUEST);
     }
 
+    public void promoteToMember() {
+        this.role = RoleType.ROLE_MEMBER;
+    }
+
 }
