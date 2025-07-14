@@ -29,14 +29,12 @@ public class AuthUseCase {
     private final JwtTokenIssuer jwtTokenIssuer;
     private final CustomUserDetailsService customUserDetailsService;
     private final RedisJwtRefreshTokenStore redisJwtRefreshTokenStore;
-    private final MemberRepository memberRepository;
 
     public LoginResponse login(String providerId) {
-        Member member = memberRepository.getOrThrow(providerId);
         JwtToken accessToken = jwtTokenIssuer.issueAccessToken(providerId);
         JwtToken refreshToken = jwtTokenIssuer.issueRefreshToken(providerId);
         redisJwtRefreshTokenStore.store(providerId, refreshToken.value(), refreshToken.duration());
-        return LoginResponse.of(accessToken.value(), refreshToken.value(), member.getIsFirst());
+        return LoginResponse.of(accessToken.value(), refreshToken.value());
     }
 
     public Boolean logout(Member member, String providerId) {
