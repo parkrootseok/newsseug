@@ -15,17 +15,17 @@ public class RedisJwtRefreshTokenStore {
 
     private final JwtTokenRepository jwtTokenRepository;
 
-    public void store(String providerId, String refreshToken, Duration duration) {
-        jwtTokenRepository.saveWithTTL(providerId, refreshToken, duration);
+    public void store(Long memberId, String refreshToken, Duration duration) {
+        jwtTokenRepository.saveWithTTL(String.valueOf(memberId), refreshToken, duration);
     }
 
-    public String getTokenByMemberId(String providerId) {
-        return jwtTokenRepository.findByKey(providerId)
+    public String getTokenByMemberId(Long memberId) {
+        return jwtTokenRepository.findByKey(String.valueOf(memberId))
                 .orElseThrow(() -> new JwtTokenException(JwtTokenErrorCode.TOKEN_EXPIRED));
     }
 
-    public Boolean invalidateTokenByMemberId(String providerId) {
-        return jwtTokenRepository.deleteByKey(providerId);
+    public Boolean invalidateTokenByMemberId(Long memberId) {
+        return jwtTokenRepository.deleteByKey(String.valueOf(memberId));
     }
 
 }

@@ -19,29 +19,29 @@ public class JwtTokenIssuer {
 
     private final JwtTokenProperties jwtTokenProperties;
 
-    public JwtToken issueAccessToken(String providerId) {
+    public JwtToken generateAccessToken(Long memberId) {
         return JwtToken.of(
                 JwtTokenType.ACCESS_TOKEN,
-                issueToken(JwtTokenType.ACCESS_TOKEN, providerId, jwtTokenProperties.expiration().access()),
+                generateToken(JwtTokenType.ACCESS_TOKEN, memberId, jwtTokenProperties.expiration().access()),
                 jwtTokenProperties.accessTokenDuration()
         );
     }
 
-    public JwtToken issueRefreshToken(String providerId) {
+    public JwtToken generateRefreshToken(Long memberId) {
         return JwtToken.of(
                 JwtTokenType.REFRESH_TOKEN,
-                issueToken(JwtTokenType.REFRESH_TOKEN, providerId, jwtTokenProperties.expiration().refresh()),
+                generateToken(JwtTokenType.REFRESH_TOKEN, memberId, jwtTokenProperties.expiration().refresh()),
                 jwtTokenProperties.refreshTokenDuration()
         );
     }
 
-    private String issueToken(JwtTokenType type, String providerId, long expiration) {
+    private String generateToken(JwtTokenType type, Long memberId, long expiration) {
         LocalDateTime now = ClockUtil.getLocalDateTime();
         return Jwts.builder()
                 .header()
                 .add("type", type)
                 .and()
-                .subject(String.valueOf(providerId))
+                .subject(String.valueOf(memberId))
                 .issuedAt(ClockUtil.convertToDate(now))
                 .expiration(ClockUtil.getExpirationDate(now, expiration))
                 .signWith(Keys.hmacShaKeyFor(jwtTokenProperties.secret().getBytes(StandardCharsets.UTF_8)))

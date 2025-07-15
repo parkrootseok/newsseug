@@ -29,28 +29,28 @@ public class AuthUseCase {
     private final CustomUserDetailsService customUserDetailsService;
     private final RedisJwtRefreshTokenStore redisJwtRefreshTokenStore;
 
-    public JwtTokenPair login(String providerId) {
-        JwtToken accessToken = jwtTokenIssuer.issueAccessToken(providerId);
-        JwtToken refreshToken = jwtTokenIssuer.issueRefreshToken(providerId);
-        redisJwtRefreshTokenStore.store(providerId, refreshToken.value(), refreshToken.duration());
+    public JwtTokenPair login(Long memberId) {
+        JwtToken accessToken = jwtTokenIssuer.generateAccessToken(memberId);
+        JwtToken refreshToken = jwtTokenIssuer.generateRefreshToken(memberId);
+        redisJwtRefreshTokenStore.store(memberId, refreshToken.value(), refreshToken.duration());
         return JwtTokenPair.of(accessToken, refreshToken);
     }
 
-    public Boolean logout(Member member, String providerId) {
-        if (!member.getOAuth2Details().getProviderId().equals(providerId)) {
+    public Boolean logout(Member member, Long memberId) {
+        if (!member.getId().equals(memberId)) {
             throw new AuthException(AuthErrorCode.AUTHENTICATION_MISMATCH);
         }
-        return redisJwtRefreshTokenStore.invalidateTokenByMemberId(providerId);
+        return redisJwtRefreshTokenStore.invalidateTokenByMemberId(memberId);
     }
 
-    public ReissueTokenResponse reissue(String tokenFromClient, String providerId) {
-        String savedToken = redisJwtRefreshTokenStore.getTokenByMemberId(providerId);
+    public ReissueTokenResponse reissue(String tokenFromClient, Long memberId) {
+        String savedToken = redisJwtRefreshTokenStore.getTokenByMemberId(memberId);
         if (!MessageDigest
                 .isEqual(tokenFromClient.getBytes(StandardCharsets.UTF_8), savedToken.getBytes(StandardCharsets.UTF_8))
         ) {
             throw new JwtTokenException(JwtTokenErrorCode.TOKEN_UNTRUSTWORTHY);
         }
-        return ReissueTokenResponse.of(jwtTokenIssuer.issueAccessToken(providerId).value());
+        return ReissueTokenResponse.of(jwtTokenIssuer.generateAccessToken(memberId).value());
     }
 
     public void registerAuthenticatedUser(String subject) {

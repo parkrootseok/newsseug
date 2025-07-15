@@ -26,7 +26,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final AuthUseCase authUseCase;
 
     @Value("${app.client.base-url}")
-    private String url;
+    private String BASE_URL;
 
     @Override
     public void onAuthenticationSuccess(
@@ -34,33 +34,35 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     ) throws IOException {
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         Member member = oAuth2User.getMember();
-        JwtTokenPair jwtTokenPair = authUseCase.login(member.getOAuth2Details().getProviderId());
+
+        JwtTokenPair jwtTokenPair = authUseCase.login(member.getId());
         response.addHeader(JwtTokenType.ACCESS_TOKEN.getValue(), jwtTokenPair.accessToken().value());
+        response.addHeader(
+                HttpHeaders.SET_COOKIE,
+                CookieUtil.create(
+                        jwtTokenPair.refreshToken().type().name(),
+                        jwtTokenPair.refreshToken().value(),
+                        jwtTokenPair.refreshToken().duration(),
+                        true,
+                        true,
+                        "None"
+                ).toString()
+        );
 
         if (RoleType.ROLE_GUEST.equals(member.getRole())) {
-            String redirectUrl = UriComponentsBuilder.fromUriString(url + "/sign-up")
-                    .build()
-                    .encode(StandardCharsets.UTF_8)
-                    .toUriString();
+            String redirectUrl = generateRedirectUrl(BASE_URL + "/sign-up");
             response.sendRedirect(redirectUrl);
         } else {
-            response.addHeader(
-                    HttpHeaders.SET_COOKIE,
-                    CookieUtil.create(
-                            jwtTokenPair.refreshToken().type().name(),
-                            jwtTokenPair.refreshToken().value(),
-                            jwtTokenPair.refreshToken().duration(),
-                            true,
-                            true,
-                            "None"
-                    ).toString()
-            );
-            String redirectUrl = UriComponentsBuilder.fromUriString(url)
-                    .build()
-                    .encode(StandardCharsets.UTF_8)
-                    .toUriString();
+            String redirectUrl = generateRedirectUrl(BASE_URL);
             response.sendRedirect(redirectUrl);
         }
+    }
+
+    private String generateRedirectUrl(String url) {
+        return UriComponentsBuilder.fromUriString(url)
+                .build()
+                .encode(StandardCharsets.UTF_8)
+                .toUriString();
     }
 
 }

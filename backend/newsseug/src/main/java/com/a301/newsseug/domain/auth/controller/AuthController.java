@@ -30,10 +30,10 @@ public class AuthController {
     @GetMapping("/logout")
     public ResponseEntity<EntityModel<Result<Boolean>>> logout(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam("providerId") @NotBlank String providerId
+            @RequestParam("memberId") @NotBlank Long memberId
     ) {
         return ResponseUtil.ok(
-                Result.of(authUseCase.logout(userDetails.getMember(), providerId))
+                Result.of(authUseCase.logout(userDetails.getMember(), memberId))
         );
     }
 
@@ -41,10 +41,10 @@ public class AuthController {
     @GetMapping("/reissue")
     public ResponseEntity<EntityModel<Result<ReissueTokenResponse>>> issueAccessToken(
             @RequestHeader("refresh-token") String refreshToken,
-            @RequestParam("providerId") @NotBlank String providerId
+            @RequestParam("memberId") @NotBlank Long memberId
     ) {
         return ResponseUtil.ok(
-                Result.of(authUseCase.reissue(refreshToken, providerId))
+                Result.of(authUseCase.reissue(refreshToken, memberId))
         );
     }
 
