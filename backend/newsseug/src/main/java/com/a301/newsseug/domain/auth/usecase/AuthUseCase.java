@@ -63,8 +63,8 @@ public class AuthUseCase {
         return JwtTokenPair.of(accessToken, newRefreshToken);
     }
 
-    public void registerAuthenticatedUser(String subject) {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(subject);
+    public void registerAuthenticatedUser(String token) {
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(jwtTokenParser.parseSubject(token));
         UsernamePasswordAuthenticationToken authentication
                 = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

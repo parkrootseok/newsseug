@@ -28,7 +28,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthUseCase authUseCase;
-    private final JwtUseCase jwtUseCase;
 
     @Override
     protected void doFilterInternal(
@@ -39,8 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-       Claims claims = jwtUseCase.extractClaims(token);
-       authUseCase.registerAuthenticatedUser(claims.getSubject());
+       authUseCase.registerAuthenticatedUser(token);
        filterChain.doFilter(request, response);
     }
 
