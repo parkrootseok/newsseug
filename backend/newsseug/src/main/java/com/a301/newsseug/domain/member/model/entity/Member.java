@@ -12,17 +12,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Entity
-@Table(name = "members")
+@Table(
+        name = "members",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"oauth2_details_provider", "oauth2_details_provider_id"})
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
@@ -43,22 +46,25 @@ public class Member extends BaseEntity {
     @Setter
     private LocalDate birth;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
     @Embedded
     private OAuth2Details oAuth2Details;
 
-    @Setter
-    private Boolean isFirst;
-
-    @Builder
-    public Member(
-            GenderType gender, LocalDate birth, ProviderType provider, String providerId, RoleType role
-    ) {
+    private Member(OAuth2Details oAuth2Details, RoleType role) {
         this.nickname = UUID.randomUUID().toString().substring(0, 6);
         this.profileImageUrl = "https://newsseug-bucket.s3.ap-northeast-2.amazonaws.com/profile/member/default.png";
-        this.gender = gender;
-        this.birth = birth;
-        this.oAuth2Details = OAuth2Details.of(provider, providerId, role);
-        this.isFirst = true;
+        this.oAuth2Details = oAuth2Details;
+        this.role = role;
+    }
+
+    public static Member createGuest(ProviderType provider, String providerId) {
+        return new Member(OAuth2Details.of(provider, providerId), RoleType.ROLE_GUEST);
+    }
+
+    public void promoteToMember() {
+        this.role = RoleType.ROLE_MEMBER;
     }
 
 }

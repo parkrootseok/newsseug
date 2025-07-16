@@ -31,9 +31,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(
-                (GrantedAuthority) () -> member.getOAuth2Details().getRole().name()
-        );
+        return Collections.singletonList((GrantedAuthority) () -> member.getRole().name());
     }
 
     @Override

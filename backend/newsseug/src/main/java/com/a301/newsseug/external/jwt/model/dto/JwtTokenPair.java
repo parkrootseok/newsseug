@@ -5,10 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record JwtTokenPair(
-        JwtToken accessToken,
-        JwtToken refreshToken
-) {
+public record JwtTokenPair(JwtToken accessToken, JwtToken refreshToken) {
     public static JwtTokenPair of(JwtToken accessToken, JwtToken refreshToken) {
         return JwtTokenPair.builder()
                 .accessToken(accessToken)

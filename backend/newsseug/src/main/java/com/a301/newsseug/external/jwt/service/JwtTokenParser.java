@@ -1,23 +1,21 @@
 package com.a301.newsseug.external.jwt.service;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-
 import com.a301.newsseug.external.jwt.config.JwtTokenProperties;
 import com.a301.newsseug.external.jwt.error.JwtTokenException;
 import com.a301.newsseug.external.jwt.error.enums.JwtTokenErrorCode;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
+import io.jsonwebtoken.security.SignatureException;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import org.springframework.stereotype.Service;
+
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class JwtTokenParser {
 
@@ -26,15 +24,24 @@ public class JwtTokenParser {
     private final JwtTokenProperties jwtTokenProperties;
 
     public Header parseHeader(String token) {
-        return getJwtParser()
-                .parseSignedClaims(removePrefix(token))
-                .getHeader();
+        return executeJwtParsing(
+                t -> getJwtParser().parseSignedClaims(t).getHeader(),
+                token
+        );
     }
 
     public Claims parseClaims(String token) {
-        return getJwtParser()
-                .parseSignedClaims(removePrefix(token))
-                .getPayload();
+        return executeJwtParsing(
+                t -> getJwtParser().parseSignedClaims(t).getPayload(),
+                token
+        );
+    }
+
+    public String parseSubject(String token) {
+        return executeJwtParsing(
+                t -> getJwtParser().parseSignedClaims(t).getPayload().getSubject(),
+                token
+        );
     }
 
     private JwtParser getJwtParser() {
@@ -48,6 +55,21 @@ public class JwtTokenParser {
             throw new JwtTokenException(JwtTokenErrorCode.TOKEN_UNTRUSTWORTHY);
         }
         return token.substring(TOKEN_PREFIX.length());
+    }
+
+    private <T> T executeJwtParsing(JwtParsingFunction<T> function, String token) {
+        try {
+            return function.parse(removePrefix(token));
+        } catch (ExpiredJwtException e) {
+            throw new JwtTokenException(JwtTokenErrorCode.TOKEN_EXPIRED);
+        } catch (JwtException e) {
+            throw new JwtTokenException(JwtTokenErrorCode.TOKEN_UNTRUSTWORTHY);
+        }
+    }
+
+    @FunctionalInterface
+    private interface JwtParsingFunction<T> {
+        T parse(String token) throws JwtException;
     }
 
 }

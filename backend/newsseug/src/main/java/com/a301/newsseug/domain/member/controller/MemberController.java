@@ -1,8 +1,11 @@
 package com.a301.newsseug.domain.member.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.member.model.dto.request.UpdateMemberRequest;
+import com.a301.newsseug.domain.member.model.dto.request.SignUpRequest;
 import com.a301.newsseug.domain.member.model.dto.response.GetMemberResponse;
+import com.a301.newsseug.domain.member.model.dto.response.SignUpResponse;
 import com.a301.newsseug.domain.member.service.MemberService;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
@@ -14,7 +17,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,22 +33,23 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "사용자 정보 조회", description = "사용자 정보를 조회한다.")
-    @GetMapping()
-    public ResponseEntity<EntityModel<Result<GetMemberResponse>>> getMemberDetails(
-            @AuthenticationPrincipal CustomUserDetails userDetails
+    @Operation(summary = "회원 가입", description = "사용자 정보(닉네임, 성별, 생년월일, 프로필 사진 등)를 등록한다.")
+    @PatchMapping("/sign-up")
+    public ResponseEntity<EntityModel<Result<SignUpResponse>>> signUp(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody @Valid SignUpRequest request
     ) {
-        return ResponseUtil.ok(Result.of(memberService.getMember(userDetails)));
+        return ResponseUtil.ok(
+                Result.of(memberService.signUp(userDetails, request))
+        );
     }
 
-    @Operation(summary = "사용자 정보 등록", description = "사용자 정보(닉네임, 성별, 생년월일, 프로필 사진 등)를 등록한다.")
-    @PutMapping()
-    public ResponseEntity<EntityModel<Result<Boolean>>> updateMember(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody @Valid UpdateMemberRequest request
+    @Operation(summary = "사용자 정보 조회", description = "사용자 정보를 조회한다.")
+    @GetMapping()
+    public ResponseEntity<EntityModel<Result<GetMemberResponse>>> retrieveMemberDetails(
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        memberService.updateMember(userDetails, request);
-        return ResponseUtil.ok(Result.of(Boolean.TRUE));
+        return ResponseUtil.ok(Result.of(memberService.retrieveMemberDetails(userDetails)));
     }
 
 }
