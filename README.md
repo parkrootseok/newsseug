@@ -1,6 +1,19 @@
-# 📰 뉴스를 한눈에 "뉴쓱"  
+# 📰 뉴스를 한눈에, "뉴쓱"
 
-## 📌 소개
+<table>
+  <tr>
+    <td><strong>시작일</strong></td>
+    <td>2024.08.19 (월)</td>
+  </tr>
+  <tr>
+    <td><strong>종료일</strong></td>
+    <td>2024.10.11 (금)</td>
+  </tr>
+</table>
+
+</br>
+
+## 1. 소개 📌
 
 **뉴쓱**은 사람들이 뉴스를 더 쉽고 재밌게 소비할 수 있도록 **뉴스 기사를 숏폼 형태로 제공**하는 커뮤니티 플랫폼입니다.
 
@@ -9,9 +22,9 @@
 </br>
 
 
-## 💻 주요 기능
+## 2. 주요 기능 💻
 
-### 🎬 숏폼 영상 시청
+### 2.1. 숏폼 영상 시청 🎬
 
 숏폼으로 제작한 뉴스 기사를 오늘의 뉴스, 연령별 추천 기사, 전체 기사, 언론사별 기사, 카테고리 기반 추천을 통해 사용자에게 제공합니다.
 
@@ -26,170 +39,133 @@
 
 </br>
 
-|   기사 조회   |  카테고리 기반 추천 기사  |
-| :---------: | :-----------------: |
+|    기사 조회        |              카테고리 기반 추천 기사               |
+| :------------------------------------------: | :------------------------------------------------: |
 | <img width="55%" src="./etc/asset/home.gif"> | <img width="55%" src="./etc/asset/user_video.gif"> |
 
-### 💼 언론사 구독
+---
+
+### 2.2 언론사 구독 💼
 
 사용자가 관심 있는 언론사를 구독하여 해당 언론사의 기사 숏폼을 모아볼 수 있습니다.
-
-</br>
 
 |                    언론사 구독                    |              구독한 언론사 기사 조회              |
 | :-----------------------------------------------: | :-----------------------------------------------: |
 | <img width="55%" src="./etc/asset/subscribe-1.gif"> | <img width="55%" src="./etc/asset/subscribe-2.gif"> |
 
-### 📂 북마크
+---
 
-사용자가 보고 싶은 기사를 북마크할 수 있는 기능으로, '저장하기' 버튼을 눌러 자신이 만든 폴더에 숏폼 영상을 저장하여 언제든지 쉽게 다시 확인할 수 있습니다. 
+### 2.3. 북마크 📂 
 
-</br>
+사용자가 보고 싶은 기사를 북마크할 수 있는 기능으로, '저장하기' 버튼을 눌러 자신이 만든 폴더에 숏폼 영상을 저장하여 언제든지 쉽게 다시 확인할 수 있습니다.
 
 |                     북마크                     |                      북마크한 기사 조회                      |
 | :--------------------------------------------: | :--------------------------------------------: |
 | <img width="55%" src="./etc/asset/scrap1.gif"> | <img width="55%" src="./etc/asset/scrap2.gif"> |
 
-### 🔍 검색
+---
 
-키워드를 입력하면 관련된 기사와 언론사를 제공합니다. 
+### 2.4. 검색 🔍 
 
-</br>
+입력한 키워드를 포함한 언론사 또는 기사를 제공합니다.
 
-<div align=center width="50%">
-    
-|                      검색                      |
-| :--------------------------------------------: |
-| <img width="55%" src="./etc/asset/search.gif"> |
-    
-</div>
+<!-- |            검색            |
+| :-----------------------------: |
+| <img width="40%" src="./etc/asset/search.gif"> | -->
 
-## 🎥 숏폼 생성 과정
-
-각 언론사에 보도된 뉴스 기사를 다음과 같은 과정을 통해 숏폼 영상으로 제작하여 사용자에게 제공합니다.
+<p>
+  <img width="35%" src="./etc/asset/search.gif" alt="검색 기능">
+</p>
 
 </br>
 
-### 🚗 주요 기능 흐름
+## 3. 핵심 기능 🎥
 
-<div align=center>
-    <img width="60%" src="./etc/asset/functional-flow-chart.png">
-</div>
+뉴쓱의 핵심 기능인 **숏폼 생성**은 각 언론사에 보도된 뉴스 기사를 다음과 같은 과정을 통해 숏폼 영상으로 제작하여 사용자에게 제공합니다.
 
-### 🕷 크롤링
+### 3.1. 숏폼 생성 과정 💡
+
+<img width="600" src="./etc/asset/shortform-creating-process.png">
+
+---
+
+### 3.2. 크롤링 🕷
 
 BeautifulSoup4 라이브러리를 활용해 각 언론사별 크롤러를 구현했습니다.
 
-</br>
+<img width="600" src="./etc/asset/crawler-compare.png">
 
-<div align=center>
-    <img width="60%" src="./etc/asset/crawler-compare.png">
-</div>
+---
 
-### 🌐 배포 환경
+### 3.3. 서버리스 환경 🌐 
 
-크롤러는 AWS Lambda 를 통한 서버리스 환경에서 동작하고 있습니다. 이러한 설계는 다음과 같은 요약을 토대로 선택했습니다.
+크롤러는 AWS Lambda 를 통한 서버리스 환경에서 동작하고 있습니다.
 
-</br>
+이러한 설계는 다음과 같은 비교를 토대로 선택했습니다.
 
-<div align=center>
-    <img width="600" src="./etc/asset/server-less-compare.png">    
-</div>
+<img width="600" src="./etc/asset/server-less-compare.png">
 
+---
 
-### ⚙️ 프롬프트 엔지니어링
+### 3.4. 프롬프트 엔지니어링 ⚙️
 
 관련 논문을 참고해 정확도를 61%에서 87%로 상승시킨 5가지 방법 중 3가지를 적용하여 다음 사진과 같이 작성했습니다.
 
-</br>
+<img width="600" src="./etc/asset/prompt.png">
 
-<div align=center>
-    <img width="600" src="./etc/asset/prompt.png">
-</div>
+---
 
-### 📃 시나리오 생성
+### 3.5. 시나리오 생성 📃
 
 기사 원문을 전달하면 프롬프트를 통해 해당 기사를 6개의 장면으로 분할하여 다음과 같은 사진과 같이 각 장면에 대한 묘사와 대사를 생성합니다.
 
-</br>
+<img width="600" src="./etc/asset/scenario.png">
 
-<div align=center>
-    <img width="600" src="./etc/asset/scenario.png">
-</div>
+---
 
-### 🎞️ 이미지 생성
+### 3.6. 이미지 생성 🎞️
 
 프롬프팅 엔지니어링을 수행한 결과 다음 사진과 같으며, 생성한 시나리오의 **description**을 바탕으로 이미지를 생성합니다.
 
-</br>
-
-<div align=center>
-    
 |                     수행전                    |                      수행후                      |
 | :--------------------------------------------: | :--------------------------------------------: |
 | <img width="275" src="./etc/asset/before.png"> | <img width="290" src="./etc/asset/after.png"> |
 
-</div>
+---
 
-### 🎙️ 나레이션 생성
+### 3.7. 나레이션 생성 🎙️
 
 생성한 시나리오의 **dialogue**을 바탕으로 나레이션을 생성합니다.
 
-</br>
+<img width="600" src="./etc/asset/speech.png">
 
-<div align=center>
-    <img width="600" src="./etc/asset/speech.png">
-</div>
+---
 
-### 📹 숏폼 생성
+### 3.8. 숏폼 생성 📹 
 
 위에서 도출한 이미지 배열과 나레이션을 합쳐 숏폼 영상을 생성합니다.
 
+<img width="600" src="./etc/asset/create_video.png">
+
 </br>
 
-<div align=center>
-    <img width="600" src="./etc/asset/create_video.png">
-</div>
+## 4. 팀 구성 🧑🏻
 
-## 🧑🏻 팀원
+### 🖥️ Client
 
-<table border="1" style="border-collapse: collapse; text-align: center; width: 100%;">
-    <tr>
-      <th scope="col" colspan="3" style="text-align: center; background-color: #ADD8E6; color: #FFF;"> Server </th>
-      <th scope="col" colspan="3" style="text-align: center; background-color: #C6ABFF; color: #FFF;"> Client </th>
-    </tr>
-    <tr>
-      <td align="center" style="background-color: #ADD8E6; color: #FFF;">박근석</td>
-      <td align="center" style="background-color: #ADD8E6; color: #FFF;">박상후</td>
-      <td align="center" style="background-color: #ADD8E6; color: #FFF;">박찬규</td>
-      <td align="center" style="background-color: #C6ABFF; color: #FFF;">김주연</td>
-      <td align="center" style="background-color: #C6ABFF; color: #FFF;">김민경</td>
-      <td align="center" style="background-color: #C6ABFF; color: #FFF;">오화랑</td>
-    </tr>
-    <tr>
-      <td>
-        <a href="https://github.com/parkrootseok"><img src="https://avatars.githubusercontent.com/parkrootseok" width=160/></a>
-      </td>
-      <td>
-        <a href="https://github.com/SangHuPark"><img src="https://avatars.githubusercontent.com/SangHuPark" width=160/></a>
-      </td>
-      <td>
-        <a href="https://github.com/pcg0610"><img src="https://avatars.githubusercontent.com/pcg0610" width=160/></a>
-      </td>
-      <td>
-       <a href="https://github.com/izodam"><img src="https://avatars.githubusercontent.com/izodam" width=160/></a> 
-      </td>
-      <td>
-        <a href="https://github.com/mkkim68"><img src="https://avatars.githubusercontent.com/mkkim68" width=160/></a>
-      </td>
-      <td>
-         <a href="https://github.com/Hwarang-Oh"><img src="https://avatars.githubusercontent.com/Hwarang-Oh" width=160/></a> 
-      </td>
-    </tr>
-</table>
+| 김주연 | 김민경 | 오화랑 |
+| :---: | :---: | :---: |
+| <a href="https://github.com/izodam"><img src="https://avatars.githubusercontent.com/izodam" width=160/></a> | <a href="https://github.com/mkkim68"><img src="https://avatars.githubusercontent.com/mkkim68" width=160/></a> | <a href="https://github.com/Hwarang-Oh"><img src="https://avatars.githubusercontent.com/Hwarang-Oh" width=160/></a> | | [izodam](https://github.com/izodam) | [mkkim68](https://github.com/mkkim68) [Hwarang-Oh](https://github.com/Hwarang-Oh) |
 
+### 🖥️ Server
 
-## ⚒️ 기술 스택
+| 박근석 | 박상후 | 박찬규 |
+| :---: | :---: | :---: |
+| <a href="https://github.com/parkrootseok"><img src="https://avatars.githubusercontent.com/parkrootseok" width=160/></a> | <a href="https://github.com/SangHuPark"><img src="https://avatars.githubusercontent.com/SangHuPark" width=160/></a> | <a href="https://github.com/pcg0610"><img src="https://avatars.githubusercontent.com/pcg0610" width=160/></a> | |[parkrootseok](https://github.com/parkrootseok) | [SangHuPark](https://github.com/SangHuPark) | [pcg0610](https://github.com/pcg0610) |
+
+</br>
+
+## 5. 사용 기술 ⚒️
 
 ### 🖥️ Client
 
@@ -216,16 +192,16 @@ BeautifulSoup4 라이브러리를 활용해 각 언론사별 크롤러를 구현
 | Crawling              |  <img src="https://img.shields.io/badge/awslambda-FF9900.svg?style=for-the-badge&logo=awslambda&logoColor=white"/> <img src="https://img.shields.io/badge/Beautiful%20Soup-000000.svg?style=for-the-badge&logoColor=white"/> |
 | Version Control       | <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"/> <img src="https://img.shields.io/badge/gitLAB-fc6d26?style=for-the-badge&logo=gitlab&logoColor=white"/> |
 | IDE                   | <img src="https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white"/> |
-
 ### 🖥️ Common
 
 |  |  |
 | :--- | :--- |
 | Collaboration | <img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white" alt="Notion"/> <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white" alt="Notion"/> <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white" alt="Swagger"/> <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white" alt="Figma"/> |
 
-## 📚 산출물
+</br>
+
+## 6. 산출물 📚
 |  |  |
 | :--: | ---: |
 | Architecture | <img width="700" src="./etc/asset/Newsseug%20Architecture.png"> |
 | ERD          | <img width="700" src="./etc/asset/ERD.png"> |
-
