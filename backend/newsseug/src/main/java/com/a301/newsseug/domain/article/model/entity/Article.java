@@ -30,9 +30,6 @@ public class Article extends BaseEntity {
     private Press press;
 
     @Column(nullable = false)
-    private String pressName;
-
-    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
@@ -69,7 +66,6 @@ public class Article extends BaseEntity {
             Press press, String title, String sourceUrl, String contentUrl, String videoUrl, String thumbnailUrl, CategoryType category
     ) {
         this.press = press;
-        this.pressName = press.getName();
         this.title = title;
         this.sourceUrl = sourceUrl;
         this.contentUrl = contentUrl;

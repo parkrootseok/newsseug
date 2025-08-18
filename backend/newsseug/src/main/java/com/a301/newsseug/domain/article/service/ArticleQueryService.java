@@ -1,6 +1,7 @@
 package com.a301.newsseug.domain.article.service;
 
 import com.a301.newsseug.domain.article.factory.ArticleConditionFactory;
+import com.a301.newsseug.domain.article.model.dto.ArticleSummaryDto;
 import com.a301.newsseug.domain.article.model.dto.response.GetArticleSummaryResponseDto;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
 import com.a301.newsseug.domain.article.repository.ArticleRepository;
@@ -22,14 +23,14 @@ public class ArticleQueryService {
     private final int PAGE_SIZE = 10;
     private final ArticleRepository articleRepository;
 
-    public Slice<GetArticleSummaryResponseDto> getSlicedArticlesByCategory(CategoryType category, int pageNumber) {
+    public Slice<ArticleSummaryDto> getSlicedArticlesByCategory(CategoryType category, int pageNumber) {
         return articleRepository.findAllArticlesByCondition(
                 ArticleConditionFactory.create(category),
                 PageRequest.of(pageNumber, PAGE_SIZE)
         );
     }
 
-    public Slice<GetArticleSummaryResponseDto> getSlicedTodayArticlesByCategory(CategoryType category, int pageNumber) {
+    public Slice<ArticleSummaryDto> getSlicedTodayArticlesByCategory(CategoryType category, int pageNumber) {
         LocalDateTime startOfDay = ClockUtil.getLocalDateTime().toLocalDate().atStartOfDay();
         return articleRepository.findAllArticlesByCondition(
                 ArticleConditionFactory.create(category, startOfDay, startOfDay.plusDays(1)),
@@ -37,14 +38,14 @@ public class ArticleQueryService {
         );
     }
 
-    public Slice<GetArticleSummaryResponseDto> getSlicedArticlesByPressAndCategory(Press press, CategoryType category, int pageNumber) {
+    public Slice<ArticleSummaryDto> getSlicedArticlesByPressAndCategory(Press press, CategoryType category, int pageNumber) {
         return articleRepository.findAllArticlesByPressAndCondition(
                 ArticleConditionFactory.create(press, category),
                 PageRequest.of(pageNumber, PAGE_SIZE)
         );
     }
 
-    public Slice<GetArticleSummaryResponseDto> getSlicedArticlesBySubscribedPress(List<Press> presses, CategoryType category, int pageNumber) {
+    public Slice<ArticleSummaryDto> getSlicedArticlesBySubscribedPress(List<Press> presses, CategoryType category, int pageNumber) {
         return articleRepository.findAllArticlesBySubscribedPress(
                 presses,
                 ArticleConditionFactory.create(category),
@@ -52,11 +53,8 @@ public class ArticleQueryService {
         );
     }
 
-    public Slice<GetArticleSummaryResponseDto> getSlicedArticlesByTitle(String title, int pageNumber) {
+    public Slice<ArticleSummaryDto> getSlicedArticlesByTitle(String title, int pageNumber) {
         return articleRepository.findAllArticlesByTitle(title, PageRequest.of(pageNumber, PAGE_SIZE));
     }
 
 }
-
-
-

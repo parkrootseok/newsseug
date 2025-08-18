@@ -1,5 +1,6 @@
 package com.a301.newsseug.domain.article.usecase;
 
+import com.a301.newsseug.domain.article.model.dto.ArticleSummaryDto;
 import com.a301.newsseug.domain.article.model.dto.response.GetArticleSummaryResponseDto;
 import com.a301.newsseug.domain.article.model.dto.response.GetArticleDetailResponseDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
@@ -21,6 +22,10 @@ import com.a301.newsseug.domain.press.service.PressCacheManager;
 import com.a301.newsseug.global.model.dto.SlicedResponse;
 import com.a301.newsseug.global.model.entity.SliceDetails;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -49,7 +54,6 @@ public class ArticleUseCase {
     public GetArticleDetailResponseDto retrieveArticleDetails(
             CustomUserDetails userDetails, Long articleId
     ) {
-
         Article article = articleCacheManager.getCachedArticle(articleId);
 
         Member loginedMember = null;
@@ -88,7 +92,6 @@ public class ArticleUseCase {
                         article.getHateCount() + hateCount
                 )
         );
-
     }
 
     /**
@@ -99,10 +102,13 @@ public class ArticleUseCase {
      * @param pageNumber    페이지 번호
      */
     public SlicedResponse<List<GetArticleSummaryResponseDto>> retrieveArticlesByCategory(String category, int pageNumber) {
-        Slice<GetArticleSummaryResponseDto> articleSummaries = articleRetrieveService.getSlicedArticlesByCategory(CategoryType.from(category), pageNumber);
+        Slice<ArticleSummaryDto> articleSummaries = articleRetrieveService.getSlicedArticlesByCategory(CategoryType.from(category), pageNumber);
+        Map<Long, Press> pressMap = fetchPressMap(articleSummaries);
         return SlicedResponse.of(
                 SliceDetails.of(articleSummaries.getNumber(), articleSummaries.isFirst(), articleSummaries.hasNext()),
-                articleSummaries.getContent()
+                articleSummaries.getContent().stream()
+                        .map(dto -> GetArticleSummaryResponseDto.of(dto, pressMap.get(dto.getPressId())))
+                        .toList()
         );
     }
 
@@ -124,10 +130,19 @@ public class ArticleUseCase {
      * @param pageNumber    페이지 번호
      */
     public SlicedResponse<List<GetArticleSummaryResponseDto>> retrieveTodayArticles(String category, int pageNumber) {
-        Slice<GetArticleSummaryResponseDto> articleSummaries = articleRetrieveService.getSlicedTodayArticlesByCategory(CategoryType.from(category), pageNumber);
+        Slice<ArticleSummaryDto> articleSummaries = articleRetrieveService.getSlicedTodayArticlesByCategory(CategoryType.from(category), pageNumber);
+        Map<Long, Press> pressMap = fetchPressMap(articleSummaries);
+        pressCacheManager.getPressMapFromCache(
+                articleSummaries.getContent().stream()
+                        .map(ArticleSummaryDto::getPressId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toUnmodifiableSet())
+        );
         return SlicedResponse.of(
                 SliceDetails.of(articleSummaries.getNumber(), articleSummaries.isFirst(), articleSummaries.hasNext()),
-                articleSummaries.getContent()
+                articleSummaries.getContent().stream()
+                        .map(dto -> GetArticleSummaryResponseDto.of(dto, pressMap.get(dto.getPressId())))
+                        .toList()
         );
     }
 
@@ -143,11 +158,12 @@ public class ArticleUseCase {
             Long pressId, String category, int pageNumber
     ) {
         Press press = pressCacheManager.getCachedPress(pressId);
-        Slice<GetArticleSummaryResponseDto> articleSummaries =
-                articleRetrieveService.getSlicedArticlesByPressAndCategory(press, CategoryType.from(category), pageNumber);
+        Slice<ArticleSummaryDto> articleSummaries = articleRetrieveService.getSlicedArticlesByPressAndCategory(press, CategoryType.from(category), pageNumber);
         return SlicedResponse.of(
                 SliceDetails.of(articleSummaries.getNumber(), articleSummaries.isFirst(), articleSummaries.hasNext()),
-                articleSummaries.getContent()
+                articleSummaries.getContent().stream()
+                        .map(dto -> GetArticleSummaryResponseDto.of(dto, press))
+                        .toList()
         );
     }
 
@@ -163,7 +179,11 @@ public class ArticleUseCase {
             CustomUserDetails userDetails, String category, int pageNumber
     ) {
         List<Subscribe> subscribes = subscribeService.getSubscribeByMember(userDetails.getMember());
-        Slice<GetArticleSummaryResponseDto> articleSummaries =
+        Map<Long, Press> pressMap = subscribes.stream()
+                .map(Subscribe::getPress)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(Press::getId, Function.identity(), (a,b) -> a));
+        Slice<ArticleSummaryDto> articleSummaries =
                 articleQueryService.getSlicedArticlesBySubscribedPress(
                         subscribes.stream().map(Subscribe::getPress).toList(),
                         CategoryType.from(category),
@@ -171,7 +191,18 @@ public class ArticleUseCase {
                 );
         return SlicedResponse.of(
                 SliceDetails.of(articleSummaries.getNumber(), articleSummaries.isFirst(), articleSummaries.hasNext()),
-                articleSummaries.getContent()
+                articleSummaries.getContent().stream()
+                        .map(dto -> GetArticleSummaryResponseDto.of(dto, pressMap.get(dto.getPressId())))
+                        .toList()
+        );
+    }
+
+    private Map<Long, Press> fetchPressMap(Slice<ArticleSummaryDto> slice) {
+        return pressCacheManager.getPressMapFromCache(
+                slice.getContent().stream()
+                        .map(ArticleSummaryDto::getPressId)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toUnmodifiableSet())
         );
     }
 
