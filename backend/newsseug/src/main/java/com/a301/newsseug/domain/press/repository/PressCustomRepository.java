@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface PressCustomRepository {
 
-    List<PressSummaryDto> findAllArticles();
+    List<PressSummaryDto> findAllPressSummaries();
 
-    List<PressSummaryDto> findAllPressesByName(String name);
+    List<PressSummaryDto> findPressSummariesByName(String name);
 
 }

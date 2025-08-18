@@ -44,7 +44,7 @@ public class InteractionUseCase {
                         .filter(Objects::nonNull)
                         .collect(Collectors.toUnmodifiableSet())
         );
-        List<PressSummaryDto> pressSummaries = pressQueryService.getPressesByName(keyword);
+        List<PressSummaryDto> pressSummaries = pressQueryService.getPressSummariesByName(keyword);
 
         if (userDetails.isEnabled()) {
             Set<Press> subscribedPress = new HashSet<>(

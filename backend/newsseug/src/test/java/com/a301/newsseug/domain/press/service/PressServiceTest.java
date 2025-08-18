@@ -65,7 +65,7 @@ public class PressServiceTest {
 				SubscribeFactory.subscribe(1L, press2)
 		);
 
-		given(pressRepository.findAllArticles()).willReturn(List.of(press1, press2));
+		given(pressRepository.findAllPressSummaries()).willReturn(List.of(press1, press2));
 //		given(subscribeRepository.findAllByMember(loginMember)).willReturn(subscribes);
 
 		// When
@@ -89,7 +89,7 @@ public class PressServiceTest {
 						true)
 			);
 
-		verify(pressRepository).findAllArticles();
+		verify(pressRepository).findAllPressSummaries();
 
 	}
 
@@ -102,7 +102,7 @@ public class PressServiceTest {
 		Press press2 = PressFactory.press(1L);
 
 
-		given(pressRepository.findAllArticles()).willReturn(List.of(press1, press2));
+		given(pressRepository.findAllPressSummaries()).willReturn(List.of(press1, press2));
 //		given(subscribeRepository.findAllByMember(loginMember))
 //				.willReturn(List.of(SubscribeFactory.subscribe(0L, press1)));
 
@@ -118,7 +118,7 @@ public class PressServiceTest {
 				tuple(1L, "name", "imageUrl", false)
 			);
 
-		verify(pressRepository).findAllArticles();
+		verify(pressRepository).findAllPressSummaries();
 
 	}
 

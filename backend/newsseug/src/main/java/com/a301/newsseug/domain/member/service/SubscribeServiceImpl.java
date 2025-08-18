@@ -76,8 +76,7 @@ public class SubscribeServiceImpl implements SubscribeService {
 
     @Override
     public Boolean isSubscribed(Member member, Press press) {
-        return subscribeRepository.existsByMemberAndPressAndActivationStatus(member, press, ActivationStatus.ACTIVE
-        );
+        return subscribeRepository.existsByMemberAndPressAndActivationStatus(member, press, ActivationStatus.ACTIVE);
     }
 
 }
