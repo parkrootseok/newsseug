@@ -3,7 +3,6 @@ package com.a301.newsseug.global.config;
 import static com.a301.newsseug.domain.member.model.entity.type.RoleType.*;
 
 import com.a301.newsseug.domain.auth.usecase.AuthUseCase;
-import com.a301.newsseug.external.jwt.usecase.JwtUseCase;
 import com.a301.newsseug.external.oauth.service.CustomOAuth2UserService;
 import com.a301.newsseug.external.jwt.filter.JwtAuthenticationFilter;
 import com.a301.newsseug.external.jwt.handler.JwtAccessDeniedHandler;
@@ -38,7 +37,6 @@ public class SecurityConfig {
     };
 
     private final AuthUseCase authUseCase;
-    private final JwtUseCase jwtUseCase;
     private final CustomOAuth2UserService oAuth2UserService;
     private final CorsConfigurationSource corsConfigurationSource;
     private final JwtAccessDeniedHandler accessDeniedHandler;
@@ -85,7 +83,7 @@ public class SecurityConfig {
                                         .successHandler(oAuth2AuthenticationSuccessHandler)
                 )
                 .addFilterBefore(
-                        new JwtAuthenticationFilter(authUseCase, jwtUseCase),
+                        new JwtAuthenticationFilter(authUseCase),
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .exceptionHandling(
