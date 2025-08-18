@@ -1,11 +1,12 @@
 package com.a301.newsseug.domain.press.service;
 
-import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.domain.press.repository.PressRepository;
 import com.a301.newsseug.external.caffeine.CacheTypes;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,15 +24,19 @@ public class PressCacheManager {
         return pressRepository.findOrThrow(id);
     }
 
+    public Map<Long, Press> getPressMapFromCache(Set<Long> ids) {
+        return ids.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(id -> id, this::getCachedPress));
+    }
+
     public void evict(Long id) {
         Objects.requireNonNull(cacheManager.getCache(CacheTypes.PRESS.getName())).evict(id);
     }
 
-    public void evictBatch(Set<String> ids) {
-        ids.forEach(id ->
-                Objects.requireNonNull(cacheManager.getCache(CacheTypes.PRESS.getName()))
-                        .evict(Long.parseLong(id))
-        );
+    public void evictBatch(Set<Long> ids) {
+        var cache = Objects.requireNonNull(cacheManager.getCache(CacheTypes.PRESS.getName()));
+        ids.forEach(cache::evict);
     }
 
 }

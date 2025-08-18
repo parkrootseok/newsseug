@@ -1,8 +1,9 @@
 package com.a301.newsseug.domain.article.model.dto.response;
 
+import com.a301.newsseug.domain.article.model.dto.ArticleSummaryDto;
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.bookmark.model.entity.Bookmark;
-import com.querydsl.core.annotations.QueryProjection;
+import com.a301.newsseug.domain.press.model.entity.Press;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,9 +21,6 @@ public class GetArticleSummaryResponseDto {
     @Schema(description = "식별자", examples = {"99"})
     private Long id;
 
-    @Schema(description = "언론사 이름", examples = {"조선일보"})
-    private String pressName;
-
     @Schema(description = "썸네일", examples = {"https://{bucket-name}~amazonaws.com/{directory-name}/{thumbnail-url}"})
     private String thumbnailUrl;
 
@@ -35,32 +33,38 @@ public class GetArticleSummaryResponseDto {
     @Schema(description = "생성일", examples = {"20240423"})
     private LocalDateTime createdAt;
 
+    private String pressName;
+
     @Builder
-    @QueryProjection
-    public GetArticleSummaryResponseDto(Long id, String pressName, String thumbnailUrl, String title, Long viewCount, LocalDateTime createdAt) {
+    public GetArticleSummaryResponseDto(Long id, String thumbnailUrl, String title, Long viewCount, LocalDateTime createdAt, String pressName) {
         this.id = id;
-        this.pressName = pressName;
         this.thumbnailUrl = thumbnailUrl;
         this.title = title;
         this.viewCount = viewCount;
         this.createdAt = createdAt;
+        this.pressName = pressName;
     }
 
     public static GetArticleSummaryResponseDto of(Article article) {
         return GetArticleSummaryResponseDto.builder()
                 .id(article.getId())
-                .pressName(article.getPress().getName())
                 .thumbnailUrl(article.getThumbnailUrl())
                 .title(article.getTitle())
                 .viewCount(article.getViewCount())
-                .createdAt(article.getSourceCreatedAt())
+                .createdAt(article.getCreatedAt())
+                .pressName(article.getPress().getName())
                 .build();
     }
 
-    public static List<GetArticleSummaryResponseDto> of(List<Article> article) {
-        return article.stream()
-                .map(GetArticleSummaryResponseDto::of)
-                .toList();
+    public static GetArticleSummaryResponseDto of(ArticleSummaryDto article, Press press) {
+        return GetArticleSummaryResponseDto.builder()
+                .id(article.getId())
+                .thumbnailUrl(article.getThumbnailUrl())
+                .title(article.getTitle())
+                .viewCount(article.getViewCount())
+                .createdAt(article.getCreatedAt())
+                .pressName(press.getName())
+                .build();
     }
 
     public static List<GetArticleSummaryResponseDto> fromBookmark(List<Bookmark> bookmarks) {
