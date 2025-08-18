@@ -16,7 +16,7 @@ public class PressCustomRepositoryImpl implements PressCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<PressSummaryDto> findAllArticles() {
+    public List<PressSummaryDto> findAllPressSummaries() {
         return jpaQueryFactory
                 .select(new QPressSummaryDto(
                         press.id,
@@ -29,7 +29,7 @@ public class PressCustomRepositoryImpl implements PressCustomRepository {
     }
 
     @Override
-    public List<PressSummaryDto> findAllPressesByName( String name) {
+    public List<PressSummaryDto> findPressSummariesByName( String name) {
         return jpaQueryFactory
                 .select(new QPressSummaryDto(
                         press.id,

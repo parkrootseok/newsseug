@@ -56,10 +56,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (Objects.nonNull(member)) {
-            return true;
-        }
-        return false;
+        return Objects.nonNull(member);
     }
 
 }

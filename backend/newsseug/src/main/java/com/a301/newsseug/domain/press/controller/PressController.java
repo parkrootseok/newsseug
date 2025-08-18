@@ -3,8 +3,8 @@ package com.a301.newsseug.domain.press.controller;
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
 import com.a301.newsseug.domain.press.model.dto.response.GetPressDetailResponseDto;
 import com.a301.newsseug.domain.press.model.dto.response.GetPressSummaryResponseDto;
-import com.a301.newsseug.domain.press.service.PressService;
 import com.a301.newsseug.domain.auth.annotation.NullableUserDetails;
+import com.a301.newsseug.domain.press.usecase.PressUseCase;
 import com.a301.newsseug.global.model.dto.Result;
 import com.a301.newsseug.global.util.ResponseUtil;
 
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "언론사 API", description = "언론사 API입니다.")
 public class PressController {
 
-    private final PressService pressService;
+    private final PressUseCase useCase;
 
     @Operation(summary = "모든 언론사 조회 API", description = "모든 언론사의 식별자, 이름 그리고 로고를 조회하는 API",
     responses = {
@@ -40,7 +40,7 @@ public class PressController {
     public ResponseEntity<EntityModel<Result<List<GetPressSummaryResponseDto>>>> getPress(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        return ResponseUtil.ok(Result.of(pressService.getPress(userDetails)));
+        return ResponseUtil.ok(Result.of(useCase.retrievePressSummaries(userDetails)));
     }
 
     @Operation(summary = "언론사 상세 조회 API", description = "단일 언론사에 대한 상제 정보를 조회하는 API",
@@ -53,7 +53,7 @@ public class PressController {
             @NullableUserDetails CustomUserDetails userDetails,
             @Parameter(name = "pressId") @PathVariable("pressId") Long pressId
     ) {
-        return ResponseUtil.ok(Result.of(pressService.getPressDetails(userDetails, pressId)));
+        return ResponseUtil.ok(Result.of(useCase.retrievePressDetail(userDetails, pressId)));
 	}
 
 }

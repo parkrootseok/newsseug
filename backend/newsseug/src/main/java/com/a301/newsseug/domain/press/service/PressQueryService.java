@@ -16,8 +16,12 @@ public class PressQueryService {
 
     private final PressRepository pressRepository;
 
-    public List<PressSummaryDto> getPressesByName(String name) {
-        return pressRepository.findAllPressesByName(name);
+    public List<PressSummaryDto> getPressSummaries() {
+        return pressRepository.findAllPressSummaries();
+    }
+
+    public List<PressSummaryDto> getPressSummariesByName(String name) {
+        return pressRepository.findPressSummariesByName(name);
     }
 
 }
