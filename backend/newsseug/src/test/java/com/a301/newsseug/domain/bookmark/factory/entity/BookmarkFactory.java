@@ -7,19 +7,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 public class BookmarkFactory {
 
-    public static Bookmark bookmark(
-            Long bookmarkId, Long folderId, Long articleId
-    ) {
-
-        Bookmark bookmark = Bookmark.builder()
-                .folder(FolderFactory.folder(folderId))
-                .article(ArticleFactory.article(articleId))
-                .build();
-
-        ReflectionTestUtils.setField(bookmark, "bookmarkId", bookmarkId);
-
-        return bookmark;
-
-    }
+//    public static Bookmark bookmark(
+//            Long bookmarkId, Long folderId, Long articleId
+//    ) {
+//
+//        Bookmark bookmark = Bookmark.builder()
+//                .folder(FolderFactory.folder(folderId))
+//                .article(ArticleFactory.article(articleId))
+//                .build();
+//
+//        ReflectionTestUtils.setField(bookmark, "bookmarkId", bookmarkId);
+//
+//        return bookmark;
+//
+//    }
 
 }

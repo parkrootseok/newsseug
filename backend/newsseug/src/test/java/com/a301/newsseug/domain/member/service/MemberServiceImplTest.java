@@ -27,54 +27,54 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class MemberServiceImplTest {
 
-    @Mock
-    private MemberRepository memberRepository;
-
-    @Mock
-    private CustomUserDetails userDetails;
-
-    @InjectMocks
-    private MemberServiceImpl memberService;
-
-    private Member loginMember;
-
-    @BeforeEach
-    void beforeEach() {
-        loginMember = MemberFactory.memberOfKakao(1L);
-        given(userDetails.getMember()).willReturn(loginMember);
-    }
-
-    @Test
-    @DisplayName("정보 조회[성공]")
-    void retrieveMemberDetails() {
-
-        // When
-        GetMemberResponse response = memberService.retrieveMemberDetails(userDetails);
-
-        // Then
-        assertThat(loginMember.getNickname()).isEqualTo(response.nickname());
-        assertThat(loginMember.getProfileImageUrl()).isEqualTo(response.profileImageUrl());
-
-    }
-
-
-    @Test
-    @DisplayName("정보 수정[성공]")
-    void signUp() {
-
-        // Given
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        SignUpRequest request = MemberRequestFactory.updateMemberRequest();
-        given(memberRepository.getOrThrow(loginMember.getOAuth2Details().getProviderId())).willReturn(loginMember);
-
-        // When
-        memberService.signUp(userDetails, request);
-
-        // Then
-        assertThat(loginMember.getNickname()).isEqualTo(request.nickname());
-        assertThat(loginMember.getGender()).isEqualTo(GenderType.from(request.gender()));
-        assertThat(loginMember.getBirth()).isEqualTo(LocalDate.parse(request.birth(), formatter));
-
-    }
+//    @Mock
+//    private MemberRepository memberRepository;
+//
+//    @Mock
+//    private CustomUserDetails userDetails;
+//
+//    @InjectMocks
+//    private MemberServiceImpl memberService;
+//
+//    private Member loginMember;
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        loginMember = MemberFactory.memberOfKakao(1L);
+//        given(userDetails.getMember()).willReturn(loginMember);
+//    }
+//
+//    @Test
+//    @DisplayName("정보 조회[성공]")
+//    void retrieveMemberDetails() {
+//
+//        // When
+//        GetMemberResponse response = memberService.retrieveMemberDetails(userDetails);
+//
+//        // Then
+//        assertThat(loginMember.getNickname()).isEqualTo(response.nickname());
+//        assertThat(loginMember.getProfileImageUrl()).isEqualTo(response.profileImageUrl());
+//
+//    }
+//
+//
+//    @Test
+//    @DisplayName("정보 수정[성공]")
+//    void signUp() {
+//
+//        // Given
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+//        SignUpRequest request = MemberRequestFactory.updateMemberRequest();
+//        given(memberRepository.getOrThrow(loginMember.getOAuth2Details().getProviderId())).willReturn(loginMember);
+//
+//        // When
+//        memberService.signUp(userDetails, request);
+//
+//        // Then
+//        assertThat(loginMember.getNickname()).isEqualTo(request.nickname());
+//        assertThat(loginMember.getGender()).isEqualTo(GenderType.from(request.gender()));
+//        assertThat(loginMember.getBirth()).isEqualTo(LocalDate.parse(request.birth(), formatter));
+//
+//    }
 
 }

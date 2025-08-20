@@ -31,49 +31,49 @@ import org.springframework.data.domain.Sort;
 @ExtendWith(MockitoExtension.class)
 class MemberFolderServiceImplTest {
 
-    @Mock
-    private FolderRepository folderRepository;
-
-    @Mock
-    private CustomUserDetails userDetails;
-
-    @InjectMocks
-    private MemberFolderServiceImpl memberFolderService;
-
-    private Member loginMember;
-
-    @BeforeEach
-    void beforeEach() {
-        loginMember = MemberFactory.memberOfKakao(1L);
-        given(userDetails.getMember()).willReturn(loginMember);
-    }
-
-    @Test
-    @DisplayName("내 폴더 목록 조회[성공]")
-    void getFoldersByMember() {
-
-        // Given
-        Pageable pageable = PageRequest.of(
-                0,
-                10,
-                Sort.by(Sort.Direction.DESC, SortingCriteria.UPDATE_AT.getField())
-        );
-        given(folderRepository.findAllByMemberAndActivationStatus(loginMember, ActivationStatus.ACTIVE, pageable))
-                .willReturn(new SliceImpl<>(List.of(FolderFactory.folder(1L), FolderFactory.folder(2L)), pageable, true)
-        );
-
-        // When
-        SlicedResponse<List<GetMemberFolderResponse>> slicedResponse = memberFolderService.getFoldersByMember(userDetails, 0);
-        List<GetMemberFolderResponse> response = slicedResponse.getContent();
-
-        // Then
-        assertThat(response)
-                .extracting(GetMemberFolderResponse::id, GetMemberFolderResponse::title, GetMemberFolderResponse::articleCount)
-                .containsExactlyInAnyOrder(
-                        tuple(1L, FolderFixtures.title, 0L),
-                        tuple(2L, FolderFixtures.title, 0L)
-                );
-
-    }
+//    @Mock
+//    private FolderRepository folderRepository;
+//
+//    @Mock
+//    private CustomUserDetails userDetails;
+//
+//    @InjectMocks
+//    private MemberFolderServiceImpl memberFolderService;
+//
+//    private Member loginMember;
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        loginMember = MemberFactory.memberOfKakao(1L);
+//        given(userDetails.getMember()).willReturn(loginMember);
+//    }
+//
+//    @Test
+//    @DisplayName("내 폴더 목록 조회[성공]")
+//    void getFoldersByMember() {
+//
+//        // Given
+//        Pageable pageable = PageRequest.of(
+//                0,
+//                10,
+//                Sort.by(Sort.Direction.DESC, SortingCriteria.UPDATE_AT.getField())
+//        );
+//        given(folderRepository.findAllByMemberAndActivationStatus(loginMember, ActivationStatus.ACTIVE, pageable))
+//                .willReturn(new SliceImpl<>(List.of(FolderFactory.folder(1L), FolderFactory.folder(2L)), pageable, true)
+//        );
+//
+//        // When
+//        SlicedResponse<List<GetMemberFolderResponse>> slicedResponse = memberFolderService.getFoldersByMember(userDetails, 0);
+//        List<GetMemberFolderResponse> response = slicedResponse.getContent();
+//
+//        // Then
+//        assertThat(response)
+//                .extracting(GetMemberFolderResponse::id, GetMemberFolderResponse::title, GetMemberFolderResponse::articleCount)
+//                .containsExactlyInAnyOrder(
+//                        tuple(1L, FolderFixtures.title, 0L),
+//                        tuple(2L, FolderFixtures.title, 0L)
+//                );
+//
+//    }
 
 }

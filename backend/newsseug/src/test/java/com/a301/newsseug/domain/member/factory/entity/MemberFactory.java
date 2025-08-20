@@ -1,28 +1,25 @@
 package com.a301.newsseug.domain.member.factory.entity;
 
-import com.a301.newsseug.domain.member.factory.fixtures.MemberFixtures;
-import com.a301.newsseug.domain.member.model.entity.type.GenderType;
+import com.a301.newsseug.domain.member.builder.MemberTestBuilder;
 import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 import com.a301.newsseug.domain.member.model.entity.type.RoleType;
-import java.time.LocalDate;
-import org.springframework.test.util.ReflectionTestUtils;
+import com.a301.newsseug.external.oauth.model.entity.type.ProviderType;
 
-public class MemberFactory {
+public final class MemberFactory {
+    private MemberFactory() {}
 
-    public static Member memberOfKakao(Long id) {
-
-        Member member = Member.builder()
-                .gender(GenderType.MALE)
-                .birth(LocalDate.now())
-                .role(RoleType.ROLE_MEMBER)
-                .provider(ProviderType.KAKAO)
-                .providerId(MemberFixtures.PROVIDER_ID)
-                .build();
-
-        ReflectionTestUtils.setField(member, "memberId", id);
-
-        return member;
+    public static Member guest(ProviderType provider, String providerId) {
+        return MemberTestBuilder.aMember()
+                .provider(provider)
+                .providerId(providerId)
+                .buildGuest();
     }
 
+    public static Member member(ProviderType provider, String providerId) {
+        return MemberTestBuilder.aMember()
+                .provider(provider)
+                .providerId(providerId)
+                .role(RoleType.ROLE_MEMBER)
+                .buildMember();
+    }
 }
