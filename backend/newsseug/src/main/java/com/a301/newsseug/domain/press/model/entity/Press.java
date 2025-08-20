@@ -46,20 +46,4 @@ public class Press {
         this.subscribeCount--;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Press press)) {
-            return false;
-        }
-        return Objects.equals(id, press.id) && Objects.equals(name, press.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
 }
