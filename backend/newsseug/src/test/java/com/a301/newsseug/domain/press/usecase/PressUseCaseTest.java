@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,9 +71,7 @@ class PressUseCaseTest {
                 PressSummaryDtoFactory.summary(2L, "한겨레")
         );
         when(pressQueryService.getPressSummaries()).thenReturn(summaries);
-
-        // 구독: id=1만 구독
-        Press press1 = PressFactory.press(1L); // 이름/이미지는 테스트에 불필요 → id만 맞추면 됨
+        Press press1 = PressFactory.press(1L);
         Subscribe sub1 = Subscribe.builder().member(member).press(press1).build();
         when(subscribeService.getSubscribeByMember(member)).thenReturn(List.of(sub1));
 
@@ -82,12 +81,9 @@ class PressUseCaseTest {
         // then
         verify(subscribeService).getSubscribeByMember(member);
         assertThat(result).hasSize(2);
-        assertThat(result).anySatisfy(dto -> {
-            if (dto.id().equals(1L)) assertThat(dto.isSubscribed()).isTrue();
-        });
-        assertThat(result).anySatisfy(dto -> {
-            if (dto.id().equals(2L)) assertThat(dto.isSubscribed()).isFalse();
-        });
+        assertThat(result)
+                .extracting(GetPressSummaryResponseDto::id, GetPressSummaryResponseDto::isSubscribed)
+                .containsExactlyInAnyOrder(tuple(1L, true), tuple(2L, false));
     }
 
     @Test
@@ -143,8 +139,6 @@ class PressUseCaseTest {
         verify(subscribeService, never()).isSubscribed(any(), any());
     }
 
-    // --- 추가 케이스들 ---
-
     @Test
     @DisplayName("목록 조회 [성공 - 전체 목록이 비어있을 때도 빈 리스트 반환]")
     void retrievePressSummaries_whenEmpty_thenReturnEmptyList() {
@@ -197,7 +191,6 @@ class PressUseCaseTest {
         );
         when(pressQueryService.getPressSummaries()).thenReturn(summaries);
 
-        // 전체 목록에는 없는 id=999인 구독 항목
         Press ghostPress = PressFactory.press(999L);
         Subscribe ghostSub = Subscribe.builder().member(member).press(ghostPress).build();
         when(subscribeService.getSubscribeByMember(member)).thenReturn(List.of(ghostSub));

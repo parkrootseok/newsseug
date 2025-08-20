@@ -12,7 +12,6 @@ public class PressTestBuilder {
     private String name = "press";
     private String imageUrl = "imageUrl";
     private String description = "description";
-    private Long subscribeCount = 0L;
 
     private PressTestBuilder() { }
 
@@ -24,20 +23,19 @@ public class PressTestBuilder {
         this.id = id;
         return this;
     }
+
     public PressTestBuilder name(String name) {
         this.name = name;
         return this;
     }
+
     public PressTestBuilder imageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
     }
+
     public PressTestBuilder description(String description) {
         this.description = description;
-        return this;
-    }
-    public PressTestBuilder subscribeCount(Long subscribeCount) {
-        this.subscribeCount = subscribeCount;
         return this;
     }
 
@@ -47,7 +45,6 @@ public class PressTestBuilder {
                 .imageUrl(this.imageUrl)
                 .description(this.description)
                 .build();
-
         ReflectionTestUtils.setField(press, "id", this.id);
         return press;
     }
