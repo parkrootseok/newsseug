@@ -1,6 +1,7 @@
 package com.a301.newsseug.domain.press.model.entity;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

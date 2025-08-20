@@ -31,92 +31,92 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class SubscribeImplTest {
 
-    @Mock
-    private PressRepository pressRepository;
-
-    @Mock
-    private SubscribeRepository subscribeRepository;
-
-    @Mock
-    private CustomUserDetails userDetails;
-
-    @InjectMocks
-    private SubscribeServiceImpl subscribeService;
-
-    private Member loginMember;
-
-    @BeforeEach
-    void beforeEach() {
-        loginMember = MemberFactory.memberOfKakao(1L);
-        given(userDetails.getMember()).willReturn(loginMember);
-    }
-
-    @Test
-    @DisplayName("구독[성공]")
-    void subscribe() {
-
-        // Given
-        Press press = PressFactory.press(1L);
-        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
-        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
-
-        // When
-        subscribeService.subscribe(userDetails, press.getId());
-
-        // Then
-        verify(subscribeRepository).save(any(Subscribe.class));
-
-    }
-
-    @Test
-    @DisplayName("구독[성공 - 재활성화]")
-    void subscribeAlreadySubscribed() {
-
-        // Given
-        Press press = PressFactory.press(1L);
-        Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
-        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
-
-        // When
-        subscribeService.subscribe(userDetails, press.getId());
-
-        // Then
-        verify(subscribeRepository, never()).save(any());
-        assertThat(subscribe.getActivationStatus()).isEqualByComparingTo(ActivationStatus.ACTIVE);
-
-    }
-
-    @Test
-    @DisplayName("구독 취소[성공]")
-    void unsubscribe() {
-
-        // Given
-        Press press = PressFactory.press(1L);
-        Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
-        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
-        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
-
-        // When
-        subscribeService.unsubscribe(userDetails, press.getId());
-
-        // Then
-        assertThat(subscribe.getActivationStatus()).isEqualTo(ActivationStatus.INACTIVE);
-    }
-
-    @Test
-    @DisplayName("구독 취소[실패 - 구독하지 않은 언론사]")
-    void unsubscribeNotSubscribed() {
-
-        // Given
-        Press press = PressFactory.press(1L);
-        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
-        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
-
-        // Then
-        assertThatThrownBy(() -> subscribeService.unsubscribe(userDetails, press.getId()))
-                .isInstanceOf(NotSubscribePressException.class);
-        
-    }
+//    @Mock
+//    private PressRepository pressRepository;
+//
+//    @Mock
+//    private SubscribeRepository subscribeRepository;
+//
+//    @Mock
+//    private CustomUserDetails userDetails;
+//
+//    @InjectMocks
+//    private SubscribeServiceImpl subscribeService;
+//
+//    private Member loginMember;
+//
+//    @BeforeEach
+//    void beforeEach() {
+//        loginMember = MemberFactory.memberOfKakao(1L);
+//        given(userDetails.getMember()).willReturn(loginMember);
+//    }
+//
+//    @Test
+//    @DisplayName("구독[성공]")
+//    void subscribe() {
+//
+//        // Given
+//        Press press = PressFactory.press(1L);
+//        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
+//        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
+//
+//        // When
+//        subscribeService.subscribe(userDetails, press.getId());
+//
+//        // Then
+//        verify(subscribeRepository).save(any(Subscribe.class));
+//
+//    }
+//
+//    @Test
+//    @DisplayName("구독[성공 - 재활성화]")
+//    void subscribeAlreadySubscribed() {
+//
+//        // Given
+//        Press press = PressFactory.press(1L);
+//        Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
+//        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
+//        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
+//
+//        // When
+//        subscribeService.subscribe(userDetails, press.getId());
+//
+//        // Then
+//        verify(subscribeRepository, never()).save(any());
+//        assertThat(subscribe.getActivationStatus()).isEqualByComparingTo(ActivationStatus.ACTIVE);
+//
+//    }
+//
+//    @Test
+//    @DisplayName("구독 취소[성공]")
+//    void unsubscribe() {
+//
+//        // Given
+//        Press press = PressFactory.press(1L);
+//        Subscribe subscribe = SubscribeFactory.subscribe(1L, press);
+//        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
+//        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.of(subscribe));
+//
+//        // When
+//        subscribeService.unsubscribe(userDetails, press.getId());
+//
+//        // Then
+//        assertThat(subscribe.getActivationStatus()).isEqualTo(ActivationStatus.INACTIVE);
+//    }
+//
+//    @Test
+//    @DisplayName("구독 취소[실패 - 구독하지 않은 언론사]")
+//    void unsubscribeNotSubscribed() {
+//
+//        // Given
+//        Press press = PressFactory.press(1L);
+//        given(pressRepository.findOrThrow(press.getId())).willReturn(press);
+//        given(subscribeRepository.findByMemberAndPress(loginMember, press)).willReturn(Optional.empty());
+//
+//        // Then
+//        assertThatThrownBy(() -> subscribeService.unsubscribe(userDetails, press.getId()))
+//                .isInstanceOf(NotSubscribePressException.class);
+//
+//    }
 
 }

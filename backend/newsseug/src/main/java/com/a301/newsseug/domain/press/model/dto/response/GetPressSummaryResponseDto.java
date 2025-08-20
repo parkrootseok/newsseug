@@ -6,6 +6,7 @@ import com.a301.newsseug.domain.press.model.entity.Press;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
+import java.util.Map;
 import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -64,9 +65,9 @@ public record GetPressSummaryResponseDto(
                 .toList();
     }
 
-    public static List<GetPressSummaryResponseDto> of(List<PressSummaryDto> pressSummaries, Set<Press> subscribePress) {
+    public static List<GetPressSummaryResponseDto> of(List<PressSummaryDto> pressSummaries, Set<Long> subscribePress) {
         return pressSummaries.stream()
-                .map(p -> GetPressSummaryResponseDto.of(p, subscribePress.contains(p)))
+                .map(p -> GetPressSummaryResponseDto.of(p, subscribePress.contains(p.getId())))
                 .toList();
     }
 

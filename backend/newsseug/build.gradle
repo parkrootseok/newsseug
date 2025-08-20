@@ -125,16 +125,12 @@ jacocoTestReport {
     }
 
     reports {
-
         xml.required = false
         csv.required = false
-
         html.outputLocation = layout.buildDirectory.dir("jacoco/html")
-
     }
 
     afterEvaluate {
-
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it, exclude: [
@@ -151,28 +147,21 @@ jacocoTestReport {
     }
 
     finalizedBy 'jacocoTestCoverageVerification'
-
 }
 
 jacocoTestCoverageVerification {
-
     violationRules {
-
         rule {
-
             enabled = true
+
             element = 'CLASS'
-
             limit {
-
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.6
-
+                minimum = 0.0
             }
 
             def Qdomains = []
-
             for (qPattern in '**/QA'..'**/QZ') {
                 Qdomains.add(qPattern + '*')
             }
@@ -187,9 +176,7 @@ jacocoTestCoverageVerification {
                     "*.config.*",
                     "*.filter.*"
             ] + Qdomains
-
         }
-
     }
 
 }

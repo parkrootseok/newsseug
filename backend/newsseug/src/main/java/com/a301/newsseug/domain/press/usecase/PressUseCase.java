@@ -1,7 +1,6 @@
 package com.a301.newsseug.domain.press.usecase;
 
 import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.member.model.entity.Subscribe;
 import com.a301.newsseug.domain.member.service.SubscribeService;
 import com.a301.newsseug.domain.press.model.dto.PressSummaryDto;
 import com.a301.newsseug.domain.press.model.dto.response.GetPressDetailResponseDto;
@@ -9,9 +8,9 @@ import com.a301.newsseug.domain.press.model.dto.response.GetPressSummaryResponse
 import com.a301.newsseug.domain.press.model.entity.Press;
 import com.a301.newsseug.domain.press.service.PressCacheManager;
 import com.a301.newsseug.domain.press.service.PressQueryService;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,11 +25,9 @@ public class PressUseCase {
     public List<GetPressSummaryResponseDto> retrievePressSummaries(CustomUserDetails userDetails) {
         List<PressSummaryDto> press = pressQueryService.getPressSummaries();
         if (userDetails.isEnabled()) {
-            Set<Press> subscribedPress = new HashSet<>(
-                    subscribeService.getSubscribeByMember(userDetails.getMember()).stream()
-                            .map(Subscribe::getPress)
-                            .toList()
-            );
+            Set<Long> subscribedPress = subscribeService.getSubscribeByMember(userDetails.getMember()).stream()
+                    .map(subscribe -> subscribe.getPress().getId())
+                    .collect(Collectors.toUnmodifiableSet());
             return GetPressSummaryResponseDto.of(press, subscribedPress);
         }
         return GetPressSummaryResponseDto.of(press);

@@ -1,22 +1,27 @@
 package com.a301.newsseug.domain.press.factory;
 
-import org.springframework.test.util.ReflectionTestUtils;
-
+import com.a301.newsseug.domain.press.builder.PressTestBuilder;
 import com.a301.newsseug.domain.press.model.entity.Press;
 
-public class PressFactory {
+public final class PressFactory {
+
+	private PressFactory() { }
+
+	public static Press press() {
+		return PressTestBuilder.aPress().build();
+	}
 
 	public static Press press(Long id) {
+		return PressTestBuilder.aPress()
+				.id(id)
+				.build();
+	}
 
-		Press press = Press.builder()
-			.name("name")
-			.description("description")
-			.imageUrl("imageUrl")
-			.build();
-
-		ReflectionTestUtils.setField(press, "pressId", id);
-
-		return press;
+	public static Press press(Long id, String name) {
+		return PressTestBuilder.aPress()
+				.id(id)
+				.name(name)
+				.build();
 	}
 
 }

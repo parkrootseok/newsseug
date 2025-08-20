@@ -13,121 +13,122 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayName("기사 관련 기능")
 @ExtendWith(MockitoExtension.class)
 public class ArticleServiceTest {
 
-    @Mock
-    private ArticleRepository articleRepository;
-
-    @Mock
-    private SubscribeRepository subscribeRepository;
-
-    @Mock
-    private CustomUserDetails userDetails;
-
-    @InjectMocks
-    private ArticleServiceImpl articleService;
-
-    private Member loginMember;
-    private Article article;
-    private Press press;
-
-    @BeforeEach
-    void beforeEach() {
-
-        loginMember = MemberFactory.memberOfKakao(1L);
-        article = ArticleFactory.article(1L);
-        press = article.getPress();
-
-    }
-
-    @Test
-    @DisplayName("오늘의 기사 목록을 가져오기 [카테고리 X]")
-    void getTodayArticleListWithoutCategory() {
-
-//        // Given
-//        LocalDateTime startOfDay = ClockUtil.getLocalDateTime().toLocalDate().atStartOfDay();
-//        LocalDateTime endOfDay = startOfDay.plusDays(1);
+//    @Mock
+//    private ArticleRepository articleRepository;
 //
-//        PageRequest pageRequest = PageRequest.of(
-//                0,
-//                10,
-//                Sort.by(Sort.Direction.DESC, SortingCriteria.CREATED_AT.getField())
-//        );
+//    @Mock
+//    private SubscribeRepository subscribeRepository;
 //
-//        // Test 데이터를 생성 (카테고리 없는 기사 목록)
-//        Slice<Article> articlesPage = new SliceImpl<>(Collections.singletonList(article), pageRequest, false);
+//    @Mock
+//    private CustomUserDetails userDetails;
 //
-//        String category = "ALL";
-//        given(articleRepository.findAllArticlesByCondition(
-//                category, startOfDay, endOfDay, pageRequest
-//        )).willReturn(articlesPage);
+//    @InjectMocks
+//    private ArticleServiceImpl articleService;
 //
-//        // When
-//        SlicedResponse<List<GetArticleResponse>> response = articleService.getTodayArticlesByCategory(category, 0);
+//    private Member loginMember;
+//    private Article article;
+//    private Press press;
 //
-//        // Then
-//        assertThat(response.getSliceDetails().getCurrentPage()).isEqualTo(0);
-//        assertThat(response.getSliceDetails().isHasNext()).isFalse();
-//        assertThat(response.getContent()).hasSize(1);  // 단일 기사만 있다고 가정
-//        assertThat(response.getContent().get(0).title()).isEqualTo(article.getTitle());
-    }
-
-    @Test
-    @DisplayName("기사 상세 정보 조회 [로그인 사용자]")
-    void getArticleDetailWithLoggedInUser() throws JsonProcessingException {
-
-//        // Given
-//        given(articleRepository.findOrThrow(any(Long.class))).willReturn(article);
-//        given(userDetails.getMember()).willReturn(loginMember);
-//        given(subscribeRepository.existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE)).willReturn(true);
-//        given(likeRepository.existsByMemberAndArticle(loginMember, article)).willReturn(true);
-//        given(hateRepository.existsByMemberAndArticle(loginMember, article)).willReturn(false);
+//    @BeforeEach
+//    void beforeEach() {
 //
-//        // When
-//        GetArticleDetailsResponse response = articleService.getArticleDetail(userDetails, 1L);
+//        loginMember = MemberFactory.memberOfKakao(1L);
+//        article = ArticleFactory.article(1L);
+//        press = article.getPress();
 //
-//        // JSON 형식 출력
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonResponse = objectMapper.writeValueAsString(response);
-//        System.out.println("JSON Response: " + jsonResponse);
+//    }
 //
-//        // Then
-//        assertThat(response.press().isSubscribed()).isTrue(); // 구독 여부 확인
+//    @Test
+//    @DisplayName("오늘의 기사 목록을 가져오기 [카테고리 X]")
+//    void getTodayArticleListWithoutCategory() {
 //
-//        // 좋아요 정보 확인
-//        SimpleLikeDto expectedLikeInfo = SimpleLikeDto.of(Boolean.TRUE, 0L);
-//        assertThat(response.likeDetail()).isEqualTo(expectedLikeInfo);
+////        // Given
+////        LocalDateTime startOfDay = ClockUtil.getLocalDateTime().toLocalDate().atStartOfDay();
+////        LocalDateTime endOfDay = startOfDay.plusDays(1);
+////
+////        PageRequest pageRequest = PageRequest.of(
+////                0,
+////                10,
+////                Sort.by(Sort.Direction.DESC, SortingCriteria.CREATED_AT.getField())
+////        );
+////
+////        // Test 데이터를 생성 (카테고리 없는 기사 목록)
+////        Slice<Article> articlesPage = new SliceImpl<>(Collections.singletonList(article), pageRequest, false);
+////
+////        String category = "ALL";
+////        given(articleRepository.findAllArticlesByCondition(
+////                category, startOfDay, endOfDay, pageRequest
+////        )).willReturn(articlesPage);
+////
+////        // When
+////        SlicedResponse<List<GetArticleResponse>> response = articleService.getTodayArticlesByCategory(category, 0);
+////
+////        // Then
+////        assertThat(response.getSliceDetails().getCurrentPage()).isEqualTo(0);
+////        assertThat(response.getSliceDetails().isHasNext()).isFalse();
+////        assertThat(response.getContent()).hasSize(1);  // 단일 기사만 있다고 가정
+////        assertThat(response.getContent().get(0).title()).isEqualTo(article.getTitle());
+//    }
 //
-//        // 싫어요 정보 확인
-//        SimpleHateDto expectedHateInfo = SimpleHateDto.of(Boolean.FALSE, 0L);
-//        assertThat(response.hateDetail()).isEqualTo(expectedHateInfo);
+//    @Test
+//    @DisplayName("기사 상세 정보 조회 [로그인 사용자]")
+//    void getArticleDetailWithLoggedInUser() throws JsonProcessingException {
 //
-//        // optional 필드 확인
-//        assertThat(response.article().title()).isEqualTo("test");
-//        assertThat(response.press().name()).isEqualTo("name");
-
-    }
-
-    @Test
-    @DisplayName("기사 상세 정보 조회 [비로그인 사용자]")
-    void getArticleDetailWithoutLogin() {
-
-//        // Given
-//        CustomUserDetails nullUserDetails = null;
-//        given(likeRepository.countByArticle(article)).willReturn(5);
-//        given(hateRepository.countByArticle(article)).willReturn(1);
+////        // Given
+////        given(articleRepository.findOrThrow(any(Long.class))).willReturn(article);
+////        given(userDetails.getMember()).willReturn(loginMember);
+////        given(subscribeRepository.existsByMemberAndPressAndActivationStatus(loginMember, press, ActivationStatus.ACTIVE)).willReturn(true);
+////        given(likeRepository.existsByMemberAndArticle(loginMember, article)).willReturn(true);
+////        given(hateRepository.existsByMemberAndArticle(loginMember, article)).willReturn(false);
+////
+////        // When
+////        GetArticleDetailsResponse response = articleService.getArticleDetail(userDetails, 1L);
+////
+////        // JSON 형식 출력
+////        ObjectMapper objectMapper = new ObjectMapper();
+////        String jsonResponse = objectMapper.writeValueAsString(response);
+////        System.out.println("JSON Response: " + jsonResponse);
+////
+////        // Then
+////        assertThat(response.press().isSubscribed()).isTrue(); // 구독 여부 확인
+////
+////        // 좋아요 정보 확인
+////        SimpleLikeDto expectedLikeInfo = SimpleLikeDto.of(Boolean.TRUE, 0L);
+////        assertThat(response.likeDetail()).isEqualTo(expectedLikeInfo);
+////
+////        // 싫어요 정보 확인
+////        SimpleHateDto expectedHateInfo = SimpleHateDto.of(Boolean.FALSE, 0L);
+////        assertThat(response.hateDetail()).isEqualTo(expectedHateInfo);
+////
+////        // optional 필드 확인
+////        assertThat(response.article().title()).isEqualTo("test");
+////        assertThat(response.press().name()).isEqualTo("name");
 //
-//        // When
-//        GetArticleDetailsResponse response = articleService.getArticleDetail(nullUserDetails, 1L);
+//    }
 //
-//        // Then
-//        assertThat(response.press().isSubscribed()).isFalse();
-//        assertThat(response.likeDetail()).isEqualTo(SimpleLikeDto.of(Boolean.FALSE, 5L));
-//        assertThat(response.hateDetail()).isEqualTo(SimpleHateDto.of(Boolean.FALSE, 1L));
-
-    }
+//    @Test
+//    @DisplayName("기사 상세 정보 조회 [비로그인 사용자]")
+//    void getArticleDetailWithoutLogin() {
+//
+////        // Given
+////        CustomUserDetails nullUserDetails = null;
+////        given(likeRepository.countByArticle(article)).willReturn(5);
+////        given(hateRepository.countByArticle(article)).willReturn(1);
+////
+////        // When
+////        GetArticleDetailsResponse response = articleService.getArticleDetail(nullUserDetails, 1L);
+////
+////        // Then
+////        assertThat(response.press().isSubscribed()).isFalse();
+////        assertThat(response.likeDetail()).isEqualTo(SimpleLikeDto.of(Boolean.FALSE, 5L));
+////        assertThat(response.hateDetail()).isEqualTo(SimpleHateDto.of(Boolean.FALSE, 1L));
+//
+//    }
 
 }

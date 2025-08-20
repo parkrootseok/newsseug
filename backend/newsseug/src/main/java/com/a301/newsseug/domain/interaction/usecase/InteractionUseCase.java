@@ -47,11 +47,9 @@ public class InteractionUseCase {
         List<PressSummaryDto> pressSummaries = pressQueryService.getPressSummariesByName(keyword);
 
         if (userDetails.isEnabled()) {
-            Set<Press> subscribedPress = new HashSet<>(
-                    subscribeService.getSubscribeByMember(userDetails.getMember()).stream()
-                            .map(Subscribe::getPress)
-                            .toList()
-            );
+            Set<Long> subscribedPress = subscribeService.getSubscribeByMember(userDetails.getMember()).stream()
+                    .map(subscribe -> subscribe.getPress().getId())
+                    .collect(Collectors.toUnmodifiableSet());
 
             return SearchResponse.of(
                     GetPressSummaryResponseDto.of(pressSummaries, subscribedPress),
