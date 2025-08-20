@@ -71,7 +71,7 @@ class PressUseCaseTest {
                 PressSummaryDtoFactory.summary(2L, "한겨레")
         );
         when(pressQueryService.getPressSummaries()).thenReturn(summaries);
-        Press press1 = PressFactory.press(1L);
+        Press press1 = PressFactory.press(1L, "조선일보");
         Subscribe sub1 = Subscribe.builder().member(member).press(press1).build();
         when(subscribeService.getSubscribeByMember(member)).thenReturn(List.of(sub1));
 
@@ -112,7 +112,6 @@ class PressUseCaseTest {
     void retrievePressDetail_whenUserDisabled_thenSkipSubscribedCheck() {
         // given
         when(userDetails.isEnabled()).thenReturn(false);
-
         Press press = PressFactory.press(20L);
         when(pressCacheManager.getCachedPress(20L)).thenReturn(press);
 
@@ -135,7 +134,6 @@ class PressUseCaseTest {
         // when / then
         assertThatThrownBy(() -> useCase.retrievePressDetail(userDetails, 999L))
                 .isInstanceOf(NotExistPressException.class);
-
         verify(subscribeService, never()).isSubscribed(any(), any());
     }
 
@@ -161,7 +159,6 @@ class PressUseCaseTest {
         when(userDetails.isEnabled()).thenReturn(true);
         Member member = mock(Member.class);
         when(userDetails.getMember()).thenReturn(member);
-
         when(pressQueryService.getPressSummaries()).thenReturn(
                 List.of(
                         PressSummaryDtoFactory.summary(1L, "A"),
