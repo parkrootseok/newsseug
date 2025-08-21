@@ -1,4 +1,4 @@
-package com.a301.newsseug.domain.member.factory.entity;
+package com.a301.newsseug.domain.member.factory;
 
 import com.a301.newsseug.domain.member.builder.MemberTestBuilder;
 import com.a301.newsseug.domain.member.model.entity.Member;
