@@ -1,45 +1,11 @@
 package com.a301.newsseug.external.jwt.service;
 
-import static com.a301.newsseug.domain.member.factory.fixtures.MemberFixtures.PROVIDER_ID;
-import static com.a301.newsseug.external.jwt.factory.fixtures.JwtFixtures.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.a301.newsseug.domain.member.factory.entity.MemberFactory;
-import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.external.jwt.exception.ExpiredTokenException;
-import com.a301.newsseug.external.jwt.exception.FailToIssueTokenException;
-import com.a301.newsseug.external.jwt.exception.InvalidFormatException;
-import com.a301.newsseug.external.jwt.exception.InvalidSignatureException;
-import com.a301.newsseug.external.jwt.exception.UntrustworthyTokenException;
-import com.a301.newsseug.external.jwt.model.entity.TokenType;
-import com.a301.newsseug.global.util.ClockUtil;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.time.Clock;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.MockedStatic;
 
 @DisplayName("JWT 관련 기능")
 @ExtendWith(MockitoExtension.class)

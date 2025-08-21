@@ -2,42 +2,12 @@ package com.a301.newsseug.domain.folder.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.a301.newsseug.domain.auth.model.entity.CustomUserDetails;
-import com.a301.newsseug.domain.bookmark.factory.entity.BookmarkFactory;
-import com.a301.newsseug.domain.bookmark.model.entity.Bookmark;
-import com.a301.newsseug.domain.bookmark.repository.BookmarkRepository;
-import com.a301.newsseug.domain.folder.exception.InaccessibleFolderException;
-import com.a301.newsseug.domain.folder.factory.entity.FolderFactory;
-import com.a301.newsseug.domain.folder.factory.fixtures.FolderFixtures;
-import com.a301.newsseug.domain.folder.model.dto.response.GetFolderResponse;
-import com.a301.newsseug.domain.folder.model.dto.response.CreateFolderResponse;
-import com.a301.newsseug.domain.folder.model.dto.response.GetFolderDetailsResponse;
-import com.a301.newsseug.domain.folder.model.entity.Folder;
-import com.a301.newsseug.domain.folder.repository.FolderRepository;
-import com.a301.newsseug.domain.member.factory.entity.MemberFactory;
-import com.a301.newsseug.domain.member.model.entity.Member;
-import com.a301.newsseug.global.enums.SortingCriteria;
-import com.a301.newsseug.global.model.entity.ActivationStatus;
-import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.data.domain.Sort;
 
 @DisplayName("폴더 관련 기능")
 @ExtendWith(MockitoExtension.class)

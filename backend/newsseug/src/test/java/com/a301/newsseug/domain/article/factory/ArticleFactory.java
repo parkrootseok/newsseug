@@ -1,30 +1,38 @@
 package com.a301.newsseug.domain.article.factory;
 
+import com.a301.newsseug.domain.article.builder.ArticleTestBuilder;
 import com.a301.newsseug.domain.article.model.entity.Article;
 import com.a301.newsseug.domain.article.model.entity.type.CategoryType;
-import com.a301.newsseug.domain.press.factory.PressFactory;
+import com.a301.newsseug.domain.article.model.entity.type.ConversionStatus;
 import com.a301.newsseug.domain.press.model.entity.Press;
-import org.springframework.test.util.ReflectionTestUtils;
 
 public class ArticleFactory {
 
-    public static Article article(Long id) {
-
-        Press press = PressFactory.press(1L);
-
-        Article article = Article.builder()
-                .title("test")
-                .sourceUrl("test_source_url")
-                .contentUrl("test_content_url")
-                .videoUrl("test_video_url")
-                .thumbnailUrl("test_thumbnail_url")
-                .category(CategoryType.POLITICS)
+    public static Article createDefault(Press press) {
+        return ArticleTestBuilder.anArticle()
                 .press(press)
                 .build();
+    }
 
-        ReflectionTestUtils.setField(article, "articleId", id);
+    public static Article createWithCategory(Press press, CategoryType category) {
+        return ArticleTestBuilder.anArticle()
+                .press(press)
+                .category(category)
+                .build();
+    }
 
-        return article;
+    public static Article createWithTitle(Press press, String title) {
+        return ArticleTestBuilder.anArticle()
+                .press(press)
+                .title(title)
+                .build();
+    }
+
+    public static Article createWithStatus(Press press, ConversionStatus status) {
+        return ArticleTestBuilder.anArticle()
+                .press(press)
+                .conversionStatus(status)
+                .build();
     }
 
 }
